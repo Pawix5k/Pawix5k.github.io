@@ -99,8 +99,9 @@ class Grid {
     left_margin;
     top_margin;
     border_width = 5;
-    ctx;
-    c;
+    buttonTopMargin;
+    buttonLeftMargin;
+    buttonSize;
 
     cells_x;
     cells_y;
@@ -120,18 +121,29 @@ class Grid {
         this.cells_y = y;
     }
 
+    drawButton() {
+        ctx.fillStyle = "blue";
+        ctx.fillRect(this.buttonLeftMargin, this.buttonTopMargin, this.buttonSize, this.buttonSize);
+    }
+
     calculateCellSizeAndMargins(canvas_width, canvas_height) {
+        this.buttonSize = parseInt(0.1 * Math.min(canvas_width, canvas_height));
+        this.buttonTopMargin = parseInt(0.03 * Math.min(canvas_width, canvas_height));
+        this.buttonLeftMargin = parseInt(0.3 * canvas_width);
+
         // vertical fit first
-        let cell_size = parseInt((canvas_height - 2 * this.basic_margin) / this.cells_y);
+        let verticalSpace = canvas_height - 2 * this.buttonTopMargin - this.buttonSize - 2 * this.basic_margin;
+        let cell_size = parseInt(verticalSpace / this.cells_y);
         let width_threshold = cell_size * this.cells_x + 2 * this.basic_margin;
 
         // horizontal fit if vertical failed
         if (width_threshold > canvas_width) {
-            cell_size = parseInt((canvas_width - 2 * this.basic_margin) / this.cells_x);
+            let horizontalSpace = canvas_width - 2 * this.basic_margin;
+            cell_size = parseInt(horizontalSpace / this.cells_x);
         }
 
         let left_margin = parseInt((canvas_width - this.cells_x * cell_size) / 2);
-        let top_margin = parseInt((canvas_height - this.cells_y * cell_size) / 2);
+        let top_margin = parseInt((verticalSpace - this.cells_y * cell_size) / 2 + 2 * this.buttonTopMargin + this.buttonSize);
 
         this.cell_size = cell_size;
         this.left_margin = left_margin;
@@ -156,6 +168,7 @@ class Grid {
         this.drawBackground();
         this.drawBorders();
         this.drawCells();
+        this.drawButton();
     }
 
     drawCells() {
