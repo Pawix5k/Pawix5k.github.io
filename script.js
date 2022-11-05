@@ -123,11 +123,14 @@ class Grid {
 
     drawButton() {
         ctx.fillStyle = "blue";
-        ctx.fillRect(this.buttonLeftMargin, this.buttonTopMargin, this.buttonSize, this.buttonSize);
+        ctx.fillRect(this.buttonTopMargin, this.buttonTopMargin, this.buttonSize, this.buttonSize);
+
+        ctx.fillStyle = "blue";
+        ctx.fillRect(c.width - this.buttonTopMargin - this.buttonSize, this.buttonTopMargin, this.buttonSize, this.buttonSize);
     }
 
     calculateCellSizeAndMargins(canvas_width, canvas_height) {
-        this.buttonSize = parseInt(0.1 * Math.min(canvas_width, canvas_height));
+        this.buttonSize = parseInt(0.18 * Math.min(canvas_width, canvas_height));
         this.buttonTopMargin = parseInt(0.03 * Math.min(canvas_width, canvas_height));
         this.buttonLeftMargin = parseInt(0.3 * canvas_width);
 
@@ -552,7 +555,7 @@ function directionInOriginalCell(startCell, endCell) {
 
 
 var move = new Move();
-var grid = new Grid(6, 6);
+var grid = new Grid(6, 9);
 
 // grid.cells[0][0].border_color = "blue";
 // grid.cells[1][2].border_color = "red";
