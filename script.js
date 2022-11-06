@@ -73,6 +73,7 @@ function handleMoveInput(x, y) {
     }
 }
 
+
 function handleEndInput(x, y) {
     switch (state) {
         case 'menu':
@@ -84,8 +85,6 @@ function handleEndInput(x, y) {
             break;
     }
 }
-
-
 
 
 function adjustCanvasSize() {
@@ -106,14 +105,6 @@ function adjustCanvasSize() {
 }
 
 
-
-
-
-
-
-
-
-
 class Grid {
 
     cells;
@@ -129,7 +120,11 @@ class Grid {
     buttons = [new Button("to-menu"), new Button("clear-cells")];
 
 
-    constructor(x, y, cluesArray) {
+    constructor(levelData) {
+        let x = levelData[0];
+        let y = levelData[1];
+        let cluesArray = levelData[2];
+        
         let cells = [];
         for (let i = 0; i < x; i++) {
             let col = [];
@@ -368,7 +363,7 @@ class Cell {
                 this.drawArrow();
                 break;
             default:
-                console.log(console.log(this));
+                console.log(this);
         }
     }
 
@@ -710,11 +705,10 @@ var menu;
 
 
 function initializeGame(levelName) {
-    console.log(levelName);
     let levelData = levelsData.get(levelName);
     state = "game";
     move = new Move();
-    grid = new Grid(levelData[0], levelData[1], levelData[2]);
+    grid = new Grid(levelData);
 
     grid.calculateAllAndDraw();
 }
