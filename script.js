@@ -9,76 +9,136 @@ var ctx = c.getContext("2d");
 c.width = window.innerWidth;
 c.height = window.innerHeight;
 
-ctx.fillStyle = "crimson";
-ctx.fillRect(0, 0, c.width, c.height);
 
-window.addEventListener('resize', reportWindowSize);
+
+window.addEventListener('resize', adjustCanvasSize);
 //window.addEventListener('pointerdown', logCoordinates);
 
+// c.addEventListener('mousedown', (event) => {
+//     move.loadNewDownInput(event.offsetX, event.offsetY);
+// });
+
+// c.addEventListener('mousemove', (event) => {
+//     move.loadNewMoveInput(event.offsetX, event.offsetY);
+// });
+
+// c.addEventListener('mouseup', (event) => {
+//     console.log('and here');
+//     move.loadNewUpInput(event.offsetX, event.offsetY);
+// });
+
+
+// c.addEventListener('touchstart', (event) => {
+//     event.preventDefault();
+//     console.log(event.changedTouches[0].pageX);
+//     move.loadNewDownInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+// });
+
+// c.addEventListener('touchmove', (event) => {
+//     event.preventDefault();
+//     move.loadNewMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+// });
+
+// c.addEventListener('touchend', (event) => {
+//     event.preventDefault();
+//     console.log('here');
+//     move.loadNewUpInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+// });
+
+var state = "menu";
+
+var levelsData = [
+    [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 2]]],
+    [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 3]]],
+    [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 4]]],
+    [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 5]]]];
+
+
 c.addEventListener('mousedown', (event) => {
-    move.loadNewDownInput(event.offsetX, event.offsetY);
+    //move.loadNewDownInput(event.offsetX, event.offsetY);
+    handleStartInput(event.offsetX, event.offsetY)
 });
 
 c.addEventListener('mousemove', (event) => {
-    move.loadNewMoveInput(event.offsetX, event.offsetY);
+    //move.loadNewMoveInput(event.offsetX, event.offsetY);
+    handleMoveInput(event.offsetX, event.offsetY);
 });
 
 c.addEventListener('mouseup', (event) => {
-    console.log('and here');
-    move.loadNewUpInput(event.offsetX, event.offsetY);
+    //move.loadNewUpInput(event.offsetX, event.offsetY);
+    handleEndInput(event.offsetX, event.offsetY);
 });
 
 
 c.addEventListener('touchstart', (event) => {
     event.preventDefault();
-    console.log(event.changedTouches[0].pageX);
-    move.loadNewDownInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+    //move.loadNewDownInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+    handleStartInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
 });
 
 c.addEventListener('touchmove', (event) => {
     event.preventDefault();
-    move.loadNewMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+    //move.loadNewMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+    handleMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
 });
 
 c.addEventListener('touchend', (event) => {
     event.preventDefault();
-    console.log('here');
-    move.loadNewUpInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+    //move.loadNewUpInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+    handleEndInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
 });
 
 
+function handleStartInput(x, y) {
+    switch (state) {
+        case 'menu':
+            break;
+        case 'game':
+            move.loadNewDownInput(x, y);
+            break;
+    }
+}
+
+function handleMoveInput(x, y) {
+    switch (state) {
+        case 'menu':
+            break;
+        case 'game':
+            move.loadNewMoveInput(x, y);
+            break;
+    }
+}
+
+function handleEndInput(x, y) {
+    switch (state) {
+        case 'menu':
+            menu.checkCollisionWithButtons(x, y);
+            break;
+        case 'game':
+            grid.checkCollisionWithButtons(x, y);
+            move.loadNewUpInput(x, y);
+            break;
+    }
+}
 
 
-// c.addEventListener('touchstart', (event) => {
-// 	console.log(`Mouse X: ${event.pageX}, Mouse Y: ${event.pageY}`);
-
-//     console.log(grid.convertCoordinatesToCells(event.offsetX, event.pageY));
-//     move.loadNewDownInput(grid, event.pageX, event.pageY);
-
-// });
-
-// c.addEventListener('touchmove', (event) => {
-// 	//console.log(`Mouse X: ${event.offsetX}, Mouse Y: ${event.offsetY}`);
-//     move.loadNewMoveInput(grid, event.pageX, event.pageY);
-
-// });
-
-// c.addEventListener('touchend', (event) => {
-// 	console.log(`Mouse X: ${event.pageX}, Mouse Y: ${event.pageY}`);
-//     move.loadNewUpInput(grid, event.pageX, event.pageY);
-
-// });
 
 
-
-
-function reportWindowSize() {
+function adjustCanvasSize() {
     c.width = window.innerWidth;
     c.height = window.innerHeight;
 
-    grid.calculateCellSizeAndMargins(c.width, c.height);
-    grid.calculateCellsPositions();
-    grid.drawBoard();
+    switch (state) {
+        case "menu":
+            menu.calculateTopSpaceHeight();
+            menu.calculateContainerVariables();
+            menu.calculateButtonsPositionsAndSize(4);
+            menu.draw();
+            break;
+        case "game":
+            grid.calculateAllAndDraw();
+            break;
+    }
 }
 
 
@@ -94,19 +154,18 @@ class Grid {
 
     cells;
 
-    cell_size;
-    basic_margin = 32;
-    left_margin;
-    top_margin;
-    border_width = 5;
-    buttonTopMargin;
-    buttonLeftMargin;
-    buttonSize;
+    cellSize;
+    basicMargin = 32;
+    cellsX;
+    cellsY;
+    topSpaceHeight;
+    cellsContainerTranslationX;
+    cellsContainerTranslationY;
 
-    cells_x;
-    cells_y;
+    buttons = [new Button("to-menu"), new Button("clear-cells")];
 
-    constructor(x, y) {
+
+    constructor(x, y, cluesArray) {
         let cells = [];
         for (let i = 0; i < x; i++) {
             let col = [];
@@ -116,53 +175,73 @@ class Grid {
             cells.push(col);
         }
 
+        cluesArray.forEach((element) => {
+            let x = element[0];
+            let y = element[1];
+            let clueDirection = element[2];
+            let clueNumber = element[3];
+
+            cells[x][y].lines.add('clue');
+            cells[x][y].clueDirection = clueDirection;
+            cells[x][y].clueNumber = clueNumber;
+        });
+
         this.cells = cells;
-        this.cells_x = x;
-        this.cells_y = y;
+        this.cellsX = x;
+        this.cellsY = y;
     }
 
-    drawButton() {
-        ctx.fillStyle = "blue";
-        ctx.fillRect(this.buttonTopMargin, this.buttonTopMargin, this.buttonSize, this.buttonSize);
-
-        ctx.fillStyle = "blue";
-        ctx.fillRect(c.width - this.buttonTopMargin - this.buttonSize, this.buttonTopMargin, this.buttonSize, this.buttonSize);
+    checkCollisionWithButtons(x, y) {
+        this.buttons.forEach((element) => {
+            if (x >= element.x && x <= element.x + element.size && y >= element.y && y <= element.y + element.size) {
+                element.triggerAction();
+            }
+        });
     }
 
-    calculateCellSizeAndMargins(canvas_width, canvas_height) {
-        this.buttonSize = parseInt(0.18 * Math.min(canvas_width, canvas_height));
-        this.buttonTopMargin = parseInt(0.03 * Math.min(canvas_width, canvas_height));
-        this.buttonLeftMargin = parseInt(0.3 * canvas_width);
+    calculateAllAndDraw() {
+        grid.calculateCellsSizeAndMargins();
+        grid.calculateCellsPositions();
+        grid.calculateButtonsPositionsAndSize();
+        grid.drawBoard()
+    }
 
-        // vertical fit first
-        let verticalSpace = canvas_height - 2 * this.buttonTopMargin - this.buttonSize - 2 * this.basic_margin;
-        let cell_size = parseInt(verticalSpace / this.cells_y);
-        let width_threshold = cell_size * this.cells_x + 2 * this.basic_margin;
+    calculateButtonsPositionsAndSize() {
+        let size = fitRectInSpace(1, 1, c.width, this.topSpaceHeight, this.basicMargin)[0];
+        this.buttons[0].size = size;
+        this.buttons[0].x = this.basicMargin;
+        this.buttons[0].y = this.basicMargin;
 
-        // horizontal fit if vertical failed
-        if (width_threshold > canvas_width) {
-            let horizontalSpace = canvas_width - 2 * this.basic_margin;
-            cell_size = parseInt(horizontalSpace / this.cells_x);
-        }
+        let rightButtonPosX = c.width - size - this.basicMargin;
+        this.buttons[1].size = size;
+        this.buttons[1].x = rightButtonPosX;
+        this.buttons[1].y = this.basicMargin;
+    }
 
-        let left_margin = parseInt((canvas_width - this.cells_x * cell_size) / 2);
-        let top_margin = parseInt((verticalSpace - this.cells_y * cell_size) / 2 + 2 * this.buttonTopMargin + this.buttonSize);
+    calculateCellsSizeAndMargins() {
+        let topSpaceHeight = parseInt(0.16 * c.height);
 
-        this.cell_size = cell_size;
-        this.left_margin = left_margin;
-        this.top_margin = top_margin;
+        let boardSizes = fitRectInSpace(this.cellsX, this.cellsY, c.width, c.height - topSpaceHeight, this.basicMargin);
+        let boardSizeX = boardSizes[0];
+        let boardSizeY = boardSizes[1];
+        let cellSize = Math.min(parseInt(boardSizeX / this.cellsX), parseInt(boardSizeY / this.cellsY));
+
+        this.topSpaceHeight = topSpaceHeight;
+        this.cellSize = cellSize;
+        this.cellsContainerTranslationX = parseInt((c.width - boardSizeX) / 2);
+        this.cellsContainerTranslationY = parseInt((c.height - topSpaceHeight - boardSizeY) / 2 + topSpaceHeight);
     }
 
     calculateCellsPositions() {
-        for (let i = 0; i < this.cells_x; i++) {
-            for (let j = 0; j < this.cells_y; j++) {
-                let pos_x = this.left_margin + i * this.cell_size;
-                let pos_y = this.top_margin + j * this.cell_size;
+        for (let i = 0; i < this.cellsX; i++) {
+            for (let j = 0; j < this.cellsY; j++) {
+                let pos_x = this.cellsContainerTranslationX + i * this.cellSize;
+                let pos_y = this.cellsContainerTranslationY + j * this.cellSize;
                 this.cells[i][j].pos_x = pos_x;
                 this.cells[i][j].pos_y = pos_y;
-                this.cells[i][j].size = this.cell_size;
-                this.cells[i][j].center_x = pos_x + this.cell_size / 2;
-                this.cells[i][j].center_y = pos_y + this.cell_size / 2;
+                this.cells[i][j].size = this.cellSize;
+                this.cells[i][j].center_x = pos_x + this.cellSize / 2;
+                this.cells[i][j].center_y = pos_y + this.cellSize / 2;
             }
         }
     }
@@ -171,24 +250,30 @@ class Grid {
         this.drawBackground();
         this.drawBorders();
         this.drawCells();
-        this.drawButton();
+
+        //draw top bar
+        ctx.fillStyle = "coral";
+        ctx.fillRect(0, 0, c.width, this.topSpaceHeight); 
+
+        //draw buttons
+        this.buttons.forEach((element) => element.draw());
     }
 
     drawCells() {
         ctx.fillStyle = "floralwhite";
 
-        for (let i = 0; i < this.cells_x; i++) {
-            for (let j = 0; j < this.cells_y; j++) {
+        for (let i = 0; i < this.cellsX; i++) {
+            for (let j = 0; j < this.cellsY; j++) {
                 this.cells[i][j].draw();
             }
         }
     }
 
     drawBorders() {
-        let x1 = this.left_margin - 2;
-        let y1 = this.top_margin - 2;
-        let x2 = this.cells_x * this.cell_size + 4;
-        let y2 = this.cells_y * this.cell_size + 4;
+        let x1 = this.cellsContainerTranslationX - 2;
+        let y1 = this.cellsContainerTranslationY - 2;
+        let x2 = this.cellsX * this.cellSize + 4;
+        let y2 = this.cellsY * this.cellSize + 4;
 
         ctx.fillStyle = "black";
         ctx.fillRect(x1, y1, x2, y2);
@@ -200,10 +285,25 @@ class Grid {
     }
 
     convertCoordinatesToCells(coordinate_x, coordinate_y) {
-        let x = parseInt((coordinate_x - this.left_margin) / this.cell_size);
-        let y = parseInt((coordinate_y - this.top_margin) / this.cell_size);
+        let x = parseInt((coordinate_x - this.cellsContainerTranslationX) / this.cellSize);
+        let y = parseInt((coordinate_y - this.cellsContainerTranslationY) / this.cellSize);
 
         return [x, y];
+    }
+
+    clearCells() {
+        // this.cells.forEach((col) => {
+        //     col.forEach((cell) => {
+        //         console.log('d');
+        //         cell.clear();
+        //     });
+        // });
+        for (let i = 0; i < this.cellsX; i++) {
+            for (let j = 0; j < this.cellsY; j++) {
+                this.cells[i][j].clear();
+            }
+        }
+        this.drawCells();
     }
 }
 
@@ -220,7 +320,6 @@ class Cell {
     clueDirection = null;
     clueNumber = null;
 
-    // 0 = up, 1 = right, 2 = down, 3 = left, 4 = solid, 5 = non-solid
     lines = new Set();
 
     click() {
@@ -263,49 +362,20 @@ class Cell {
         }
     }
 
+    clear() {
+        if (!(this.lines.has('clue'))) {
+            this.lines.clear();
+        }
+    }
+
     drawLine(direction) {
         ctx.strokeStyle = "gray";
         ctx.fillStyle = "gray";
         ctx.lineWidth = 3;
 
-        console.log("drawing ", grid.convertCoordinatesToCells(this.pos_x, this.pos_y), " lines ", direction);
+        //console.log("drawing ", grid.convertCoordinatesToCells(this.pos_x, this.pos_y), " lines ", direction);
 
-        // switch (direction) {
-        //     case 'up':
-        //         //ctx.strokeStyle = "yellow";// ???????????????????????????
-
-        //         ctx.moveTo(this.center_x, this.center_y);
-        //         ctx.lineTo(this.center_x, this.center_y - this.size / 2 + 2);
-        //         ctx.stroke();
-        //         break;
-        //     case 'right':
-        //         ctx.moveTo(this.center_x, this.center_y);
-        //         ctx.lineTo(this.center_x + this.size / 2 - 2, this.center_y);
-        //         ctx.stroke();
-        //         break;
-        //     case 'down':
-        //         ctx.moveTo(this.center_x, this.center_y);
-        //         ctx.lineTo(this.center_x, this.center_y + this.size / 2 - 2);
-        //         ctx.stroke();
-        //         break;
-        //     case 'left':
-        //         ctx.moveTo(this.center_x, this.center_y);
-        //         ctx.lineTo(this.center_x - this.size / 2 + 2, this.center_y);
-        //         ctx.stroke();
-        //         break;
-        //     case 'solid':
-        //         ctx.fillStyle = this.solidColor;
-        //         ctx.fillRect(this.pos_x + 2, this.pos_y + 2, this.size - 4, this.size - 4);
-        //         break;
-        //     case 'non-solid':
-        //         ctx.fillStyle = this.solidColor;
-        //         ctx.fillRect(this.center_x - 6, this.center_y - 6, 12, 12);
-        //         break;
-        //     default:
-        //         console.log('default');
-        //   }
-
-          switch (direction) {
+        switch (direction) {
             case 'up':
                 ctx.fillRect(this.center_x - 2, this.center_y, 4, - this.size / 2 + 2);
                 break;
@@ -329,13 +399,13 @@ class Cell {
             case 'clue':
                 ctx.fillStyle = this.solidColor;
                 let font = (this.size * 0.55).toString().concat('px sans-serif');
-                console.log(font);
                 ctx.font = font;
                 ctx.fillText(this.clueNumber.toString(), this.center_x - this.size * 0.3, this.center_y + this.size * 0.3);
                 this.drawArrow();
+                break;
             default:
-                console.log('default');
-          }
+                console.log(console.log(this));
+        }
     }
 
     drawArrow() {
@@ -467,7 +537,6 @@ class Move {
         this.pointerDown = false;
         this.erasing = false;
 
-        console.log(grid.cells[0][0]);
         //grid.drawBoard();
     }
 
@@ -528,6 +597,119 @@ class Move {
     }
 }
 
+class Button {
+    type;
+    x;
+    y;
+    size;
+    index;
+
+    constructor(type) {
+        this.type = type;
+    }
+
+    draw() {
+        ctx.fillStyle = "beige";
+        ctx.fillRect(this.x, this.y, this.size, this.size);
+    }
+
+    triggerAction() {
+        switch(this.type) {
+            case "level":
+                initializeGame(this.index);
+                break;
+            case "to-menu":
+                initializeMenu();
+                break;
+            case "clear-cells":
+                grid.clearCells();
+                break;
+        }
+    }
+}
+
+class Menu {
+    basicMargin = 32;
+    topSpaceHeight;
+
+    levelsContainerX;
+    levelsContainerY;
+    levelsContainerTranslationX;
+    levelsContainerTranslationY;
+
+    levelButtons = [];
+
+    checkCollisionWithButtons(x, y) {
+        this.levelButtons.forEach((element) => {
+            if (x >= element.x && x <= element.x + element.size && y >= element.y && y <= element.y + element.size) {
+                element.triggerAction();
+            }
+        });
+    }
+
+    addLevelButtons() {
+        levelsData.forEach((element, index) => {
+            let btn = new Button("level");
+            btn.index = index;
+            this.levelButtons.push(btn)
+        });
+    }
+
+    calculateButtonsPositionsAndSize(nInRow) {
+        let spacesToButtonsRatio = 0.4
+        let buttonSize = parseInt(this.levelsContainerX / (nInRow + (nInRow + 1) * spacesToButtonsRatio));
+        let spaceBetween = parseInt(spacesToButtonsRatio * buttonSize);
+        
+        for (let i = 0; i < this.levelButtons.length; i++) {
+            let column = i % nInRow;
+            let row = Math.floor(i/nInRow);
+
+            this.levelButtons[i].size = buttonSize;
+            this.levelButtons[i].x = this.levelsContainerTranslationX + (column + 1) * spaceBetween + column * buttonSize;
+            this.levelButtons[i].y = this.levelsContainerTranslationY + (row + 1) * spaceBetween + row * buttonSize;
+        }
+    }
+
+    draw() {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, c.width, c.height);
+        //top bar
+        ctx.fillStyle = "crimson";
+        ctx.fillRect(0, this.topSpaceHeight, c.width, - this.topSpaceHeight);
+
+        //bottom square
+        ctx.fillStyle = "coral";
+        ctx.fillRect(this.levelsContainerTranslationX, this.levelsContainerTranslationY, this.levelsContainerX, this.levelsContainerY);
+
+        //levelButtons
+        this.levelButtons.forEach(element => element.draw());
+    }
+
+    calculateContainerVariables() {
+        let containerSizes = fitRectInSpace(1, 1, c.width, c.height - this.topSpaceHeight, this.basicMargin);
+        this.levelsContainerX = containerSizes[0];
+        this.levelsContainerY = containerSizes[1];
+
+        this.levelsContainerTranslationX = parseInt((c.width - this.levelsContainerX) / 2);
+        this.levelsContainerTranslationY = parseInt((c.height - this.topSpaceHeight - this.levelsContainerY) / 2 + this.topSpaceHeight);
+    }
+
+    calculateTopSpaceHeight() {
+        this.topSpaceHeight = parseInt(0.16 * c.height);
+    }
+}
+
+function fitRectInSpace(rectX, rectY, spaceX, spaceY, margin) {
+    if (rectX / rectY > (spaceX - 2 * margin) / (spaceY - 2 * margin)) {
+        let x = spaceX - 2 * margin;
+        let y = x  * rectY / rectX
+        return [parseInt(x), parseInt(y)];
+    }
+    let y = spaceY - 2 * margin;
+    let x = y  * rectX / rectY;
+    return [parseInt(x), parseInt(y)];
+}
+
 function directionInOriginalCell(startCell, endCell) {
     let x1 = startCell[0];
     let y1 = startCell[1];
@@ -553,34 +735,27 @@ function directionInOriginalCell(startCell, endCell) {
     }
 }
 
-
-var move = new Move();
-var grid = new Grid(6, 9);
-
-// grid.cells[0][0].border_color = "blue";
-// grid.cells[1][2].border_color = "red";
-
-grid.calculateCellSizeAndMargins(c.width, c.height);
-grid.calculateCellsPositions();
-grid.cells[0][0].lines.add('clue');
-grid.cells[0][0].clueDirection = 'right';
-grid.cells[0][0].clueNumber = 0;
-
-grid.cells[0][2].lines.add('clue');
-grid.cells[0][2].clueDirection = 'right';
-grid.cells[0][2].clueNumber = 2;
-
-grid.cells[2][2].lines.add('clue');
-grid.cells[2][2].clueDirection = 'right';
-grid.cells[2][2].clueNumber = 2;
-
-grid.cells[1][5].lines.add('clue');
-grid.cells[1][5].clueDirection = 'right';
-grid.cells[1][5].clueNumber = 2;
-
-// grid.drawCells();
-// grid.drawBorders();
-
-grid.drawBoard()
+var move;
+var grid;
+var menu;
 
 
+function initializeGame(index) {
+    state = "game";
+    move = new Move();
+    grid = new Grid(levelsData[index][0], levelsData[index][1], levelsData[index][2]);
+
+    grid.calculateAllAndDraw();
+}
+
+function initializeMenu() {
+    state = "menu";
+    menu = new Menu();
+    menu.calculateTopSpaceHeight();
+    menu.calculateContainerVariables();
+    menu.addLevelButtons();
+    menu.calculateButtonsPositionsAndSize(4);
+    menu.draw();
+}
+
+initializeMenu();
