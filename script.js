@@ -1,7 +1,3 @@
-// import { Grid } from './grid.js'
-// import { Cell } from './cell.js'
-
-
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
@@ -12,79 +8,47 @@ c.height = window.innerHeight;
 
 
 window.addEventListener('resize', adjustCanvasSize);
-//window.addEventListener('pointerdown', logCoordinates);
-
-// c.addEventListener('mousedown', (event) => {
-//     move.loadNewDownInput(event.offsetX, event.offsetY);
-// });
-
-// c.addEventListener('mousemove', (event) => {
-//     move.loadNewMoveInput(event.offsetX, event.offsetY);
-// });
-
-// c.addEventListener('mouseup', (event) => {
-//     console.log('and here');
-//     move.loadNewUpInput(event.offsetX, event.offsetY);
-// });
-
-
-// c.addEventListener('touchstart', (event) => {
-//     event.preventDefault();
-//     console.log(event.changedTouches[0].pageX);
-//     move.loadNewDownInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
-// });
-
-// c.addEventListener('touchmove', (event) => {
-//     event.preventDefault();
-//     move.loadNewMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
-// });
-
-// c.addEventListener('touchend', (event) => {
-//     event.preventDefault();
-//     console.log('here');
-//     move.loadNewUpInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
-// });
 
 var state = "menu";
 
-var levelsData = [
-    [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 2]]],
-    [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 3]]],
-    [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 4]]],
-    [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 5]]]];
+var levelsData = new Map()
+levelsData.set("manual1", [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 2]]]);
+levelsData.set("manual2", [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 3]]]);
+
+
+// var levelsData = [
+//     [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 2]]],
+//     [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 3]]],
+//     [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 4]]],
+//     [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 5]]]
+// ];
 
 
 c.addEventListener('mousedown', (event) => {
-    //move.loadNewDownInput(event.offsetX, event.offsetY);
     handleStartInput(event.offsetX, event.offsetY)
 });
 
 c.addEventListener('mousemove', (event) => {
-    //move.loadNewMoveInput(event.offsetX, event.offsetY);
     handleMoveInput(event.offsetX, event.offsetY);
 });
 
 c.addEventListener('mouseup', (event) => {
-    //move.loadNewUpInput(event.offsetX, event.offsetY);
     handleEndInput(event.offsetX, event.offsetY);
 });
 
 
 c.addEventListener('touchstart', (event) => {
     event.preventDefault();
-    //move.loadNewDownInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
     handleStartInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
 });
 
 c.addEventListener('touchmove', (event) => {
     event.preventDefault();
-    //move.loadNewMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
     handleMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
 });
 
 c.addEventListener('touchend', (event) => {
     event.preventDefault();
-    //move.loadNewUpInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
     handleEndInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
 });
 
@@ -602,7 +566,7 @@ class Button {
     x;
     y;
     size;
-    index;
+    levelName;
 
     constructor(type) {
         this.type = type;
@@ -616,7 +580,7 @@ class Button {
     triggerAction() {
         switch(this.type) {
             case "level":
-                initializeGame(this.index);
+                initializeGame(this.levelName);
                 break;
             case "to-menu":
                 initializeMenu();
@@ -648,11 +612,16 @@ class Menu {
     }
 
     addLevelButtons() {
-        levelsData.forEach((element, index) => {
+        // levelsData.forEach((element, index) => {
+        //     let btn = new Button("level");
+        //     btn.index = index;
+        //     this.levelButtons.push(btn)
+        // });
+        for (const name of levelsData.keys()) {
             let btn = new Button("level");
-            btn.index = index;
-            this.levelButtons.push(btn)
-        });
+            btn.levelName = name;
+            this.levelButtons.push(btn);
+        }
     }
 
     calculateButtonsPositionsAndSize(nInRow) {
@@ -740,10 +709,12 @@ var grid;
 var menu;
 
 
-function initializeGame(index) {
+function initializeGame(levelName) {
+    console.log(levelName);
+    let levelData = levelsData.get(levelName);
     state = "game";
     move = new Move();
-    grid = new Grid(levelsData[index][0], levelsData[index][1], levelsData[index][2]);
+    grid = new Grid(levelData[0], levelData[1], levelData[2]);
 
     grid.calculateAllAndDraw();
 }
