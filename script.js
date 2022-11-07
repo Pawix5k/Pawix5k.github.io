@@ -12,8 +12,64 @@ window.addEventListener('resize', adjustCanvasSize);
 var state = "menu";
 
 var levelsData = new Map()
-levelsData.set("manual1", [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 2]]]);
-levelsData.set("manual2", [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 3]]]);
+levelsData.set("tutorial", [4, 4, [[0, 0, "right", 0], [0, 2, "down", 1], [3, 3, "up", 1]],
+'[[["clue"],["solid"],["clue"],["solid"]],\
+[["down","right"],["down","up"],["down","up"],["right","up"]],\
+[["left","right"],["down","right"],["down","up"],["left","up"]],\
+[["down","left"],["left","up"],["solid"],["clue"]]]'
+]);
+levelsData.set("manual1", [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 2]],
+'[[["clue"],["solid"],["clue"],["down","right"],["right","up"],["solid"]],\
+[["down","right"],["down","up"],["down","up"],["left","up"],["left","right"],["clue"]],\
+[["down","left"],["right","up"],["clue"],["down","right"],["left","up"],["solid"]],\
+[["down","right"],["left","up"],["solid"],["down","left"],["down","up"],["right","up"]],\
+[["left","right"],["down","right"],["down","up"],["right","up"],["down","right"],["left","up"]],\
+[["down","left"],["left","up"],["solid"],["down","left"],["left","up"],["solid"]]]'
+]);
+levelsData.set("manual2", [6, 8, [[0, 7, "right", 1], [1, 2, "up", 1], [3, 2, "down", 3], [5, 4, "up", 0]],
+'[[["down","right"],["down","up"],["down","up"],["down","up"],["down","up"],["down","up"],["right","up"],["clue"]],\
+[["left","right"],["solid"],["clue"],["down","right"],["down","up"],["right","up"],["down","left"],["right","up"]],\
+[["left","right"],["down","right"],["down","up"],["left","up"],["down","right"],["left","up"],["down","right"],["left","up"]],\
+[["left","right"],["left","right"],["clue"],["solid"],["left","right"],["solid"],["left","right"],["solid"]],\
+[["left","right"],["down","left"],["down","up"],["right","up"],["down","left"],["right","up"],["down","left"],["right","up"]],\
+[["down","left"],["down","up"],["down","up"],["left","up"],["clue"],["down","left"],["down","up"],["left","up"]]]'
+]);
+levelsData.set("manual3", [7, 10, [[0, 6, "down", 0], [1, 1, "right", 2], [2, 6, "up", 1], [3, 2, "left", 0], [3, 4, "right", 2], [4, 7, "left", 0], [5, 4, "down", 2], [5, 6, "down", 2], [6, 9, "left", 2]],
+'[[["down","right"],["down","up"],["down","up"],["down","up"],["down","up"],["right","up"],["clue"],["down","right"],["down","up"],["right","up"]],\
+[["left","right"],["clue"],["down","right"],["down","up"],["right","up"],["down","left"],["down","up"],["left","up"],["down","right"],["left","up"]],\
+[["left","right"],["solid"],["down","left"],["right","up"],["down","left"],["right","up"],["clue"],["down","right"],["left","up"],["solid"]],\
+[["down","left"],["right","up"],["clue"],["left","right"],["clue"],["down","left"],["right","up"],["down","left"],["down","up"],["right","up"]],\
+[["down","right"],["left","up"],["down","right"],["left","up"],["solid"],["down","right"],["left","up"],["clue"],["down","right"],["left","up"]],\
+[["left","right"],["solid"],["down","left"],["right","up"],["clue"],["left","right"],["clue"],["solid"],["left","right"],["solid"]],\
+[["down","left"],["down","up"],["down","up"],["left","up"],["solid"],["down","left"],["down","up"],["down","up"],["left","up"],["clue"]]]'
+]);
+
+// var solutionStr = '[[["clue"],["solid"],["clue"],["down","right"],["right","up"],["solid"]],\
+// [["down","right"],["down","up"],["down","up"],["left","up"],["left","right"],["clue"]],\
+// [["down","left"],["right","up"],["clue"],["down","right"],["left","up"],["solid"]],\
+// [["down","right"],["left","up"],["solid"],["down","left"],["down","up"],["right","up"]],\
+// [["left","right"],["down","right"],["down","up"],["right","up"],["down","right"],["left","up"]],\
+// [["down","left"],["left","up"],["solid"],["down","left"],["left","up"],["solid"]]]';
+
+// var solutionsStr2 = '[[["down","right"],["down","up"],["down","up"],["down","up"],["down","up"],["down","up"],["right","up"],["clue"]],\
+// [["left","right"],["solid"],["clue"],["down","right"],["down","up"],["right","up"],["down","left"],["right","up"]],\
+// [["left","right"],["down","right"],["down","up"],["left","up"],["down","right"],["left","up"],["down","right"],["left","up"]],\
+// [["left","right"],["left","right"],["clue"],["solid"],["left","right"],["solid"],["left","right"],["solid"]],\
+// [["left","right"],["down","left"],["down","up"],["right","up"],["down","left"],["right","up"],["down","left"],["right","up"]],\
+// [["down","left"],["down","up"],["down","up"],["left","up"],["clue"],["down","left"],["down","up"],["left","up"]]]';
+
+// var solutionStr3 = '[[["down","right"],["down","up"],["down","up"],["down","up"],["down","up"],["right","up"],["clue"],["down","right"],["down","up"],["right","up"]],\
+// [["left","right"],["clue"],["down","right"],["down","up"],["right","up"],["down","left"],["down","up"],["left","up"],["down","right"],["left","up"]],\
+// [["left","right"],["solid"],["down","left"],["right","up"],["down","left"],["right","up"],["clue"],["down","right"],["left","up"],["solid"]],\
+// [["down","left"],["right","up"],["clue"],["left","right"],["clue"],["down","left"],["right","up"],["down","left"],["down","up"],["right","up"]],\
+// [["down","right"],["left","up"],["down","right"],["left","up"],["solid"],["down","right"],["left","up"],["clue"],["down","right"],["left","up"]],\
+// [["left","right"],["solid"],["down","left"],["right","up"],["clue"],["left","right"],["clue"],["solid"],["left","right"],["solid"]],\
+// [["down","left"],["down","up"],["down","up"],["left","up"],["solid"],["down","left"],["down","up"],["down","up"],["left","up"],["clue"]]]';
+
+// varSolutionStrTutorial = '[[["clue"],["solid"],["clue"],["solid"]],\
+// [["down","right"],["down","up"],["down","up"],["right","up"]],\
+// [["left","right"],["down","right"],["down","up"],["left","up"]],\
+// [["down","left"],["left","up"],["solid"],["clue"]]]';
 
 
 // var levelsData = [
@@ -117,6 +173,10 @@ class Grid {
     cellsContainerTranslationX;
     cellsContainerTranslationY;
 
+    playerSolution;
+    correctSolutionStr;
+    solved = false;
+
     buttons = [new Button("to-menu"), new Button("clear-cells")];
 
 
@@ -124,14 +184,24 @@ class Grid {
         let x = levelData[0];
         let y = levelData[1];
         let cluesArray = levelData[2];
+        let correctSolutionStr = levelData[3];
         
         let cells = [];
         for (let i = 0; i < x; i++) {
             let col = [];
             for (let j = 0; j < y; j++) {
-                col.push(new Cell(ctx, c));
+                col.push(new Cell());
             }
             cells.push(col);
+        }
+
+        let playerSolution = []
+        for (let i = 0; i < x; i++) {
+            let col = [];
+            for (let j = 0; j < y; j++) {
+                col.push([]);
+            }
+            playerSolution.push(col);
         }
 
         cluesArray.forEach((element) => {
@@ -143,11 +213,52 @@ class Grid {
             cells[x][y].lines.add('clue');
             cells[x][y].clueDirection = clueDirection;
             cells[x][y].clueNumber = clueNumber;
+
+            playerSolution[x][y].push('clue');
         });
 
+        this.correctSolutionStr = correctSolutionStr;
+        this.playerSolution = playerSolution;
         this.cells = cells;
         this.cellsX = x;
         this.cellsY = y;
+    }
+
+    checkIfSolved() {
+        console.log(JSON.stringify(grid.playerSolution) == this.correctSolutionStr);
+        return JSON.stringify(grid.playerSolution) == this.correctSolutionStr;
+    }
+
+    manageSolvedState() {
+        let solved = this.checkIfSolved();
+        if (this.solved == false && solved == true) {
+            this.solved = solved;
+            grid.changeCellsColorAndDraw("limegreen");
+        }
+        else if (this.solved == true && solved == false) {
+            this.solved = solved;
+            grid.changeCellsColorAndDraw("floralwhite");
+        }
+    }
+
+    createArrayOfSolve() {
+        let arr = [];
+        for (let i = 0; i < this.cellsX; i++) {
+            let col = [];
+            for (let j = 0; j < this.cellsY; j++) {
+                col.push(Array.from(this.cells[i][j].lines).sort());
+            }
+            arr.push(col);
+        }
+
+        let str = '[';
+        for (const line of arr) {
+            str += JSON.stringify(line) + ',\\\n';
+        }
+        str = str.slice(0, -3);
+        str += ']';
+
+        console.log(str);
     }
 
     checkCollisionWithButtons(x, y) {
@@ -219,10 +330,17 @@ class Grid {
     }
 
     drawCells() {
-        ctx.fillStyle = "floralwhite";
-
         for (let i = 0; i < this.cellsX; i++) {
             for (let j = 0; j < this.cellsY; j++) {
+                this.cells[i][j].draw();
+            }
+        }
+    }
+
+    changeCellsColorAndDraw(color) {
+        for (let i = 0; i < this.cellsX; i++) {
+            for (let j = 0; j < this.cellsY; j++) {
+                this.cells[i][j].color = color;
                 this.cells[i][j].draw();
             }
         }
@@ -251,18 +369,16 @@ class Grid {
     }
 
     clearCells() {
-        // this.cells.forEach((col) => {
-        //     col.forEach((cell) => {
-        //         console.log('d');
-        //         cell.clear();
-        //     });
-        // });
         for (let i = 0; i < this.cellsX; i++) {
             for (let j = 0; j < this.cellsY; j++) {
                 this.cells[i][j].clear();
+                if (!this.playerSolution[i][j].includes("clue")) {
+                    this.playerSolution[i][j] = [];
+                }
             }
         }
         this.drawCells();
+        this.manageSolvedState();
     }
 }
 
@@ -410,22 +526,13 @@ class Cell {
         }
     }
 
-    draw() {
+    draw(color = this.color) {
         // border
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = color;
         ctx.fillRect(this.pos_x + 2, this.pos_y + 2, this.size - 4, this.size - 4);
         this.lines.forEach(element => this.drawLine(element));
     }
 }
-
-
-
-
-
-
-
-
-
 
 
 class Move {
@@ -461,22 +568,20 @@ class Move {
                     }
                 }
                 this.transitCell = cellCoordinates;
-                
-                // let x1 = this.startCell[0];
-                // let y1 = this.startCell[1];
 
-                // let x2 = this.transitCell[0];
-                // let y2 = this.transitCell[1];
-
-                // grid.cells[x1][y1].color = "blue";
-                // grid.cells[x2][y2].color = "green";
-
-                //this.resolveLinesInCells(grid);
                 this.resolveLinesInCells();
 
-                //grid.drawBoard();
+                let x1 = this.startCell[0];
+                let y1 = this.startCell[1]
+                let x2 = cellCoordinates[0];
+                let y2 = cellCoordinates[1]
+
+                grid.playerSolution[x1][y1] = Array.from(grid.cells[x1][y1].lines).sort();
+                grid.playerSolution[x2][y2] = Array.from(grid.cells[x2][y2].lines).sort();
 
                 this.startCell = cellCoordinates;
+                console.log("move");
+                grid.manageSolvedState();
             }
         }
     }
@@ -485,9 +590,22 @@ class Move {
     loadNewUpInput(coordinateX, coordinateY) {
         if (this.leftOriginalCell == false) {
             let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
+            let x = cellCoordinates[0];
+            let y = cellCoordinates[1];
 
-            grid.cells[cellCoordinates[0]][cellCoordinates[1]].click();
-            grid.cells[cellCoordinates[0]][cellCoordinates[1]].draw();
+
+            grid.cells[x][y].click();
+            grid.cells[x][y].draw();
+
+            grid.playerSolution[x][y] = Array.from(grid.cells[x][y].lines).sort();
+
+            console.log("up");
+            grid.manageSolvedState();
+
+            // if (JSON.stringify(grid.playerSolution) == JSON.stringify(solution)) {
+            //     console.log("BINGOOOOO");
+            //     grid.changeCellsColorAndDraw("limegreen");
+            // }
         }
 
         this.startCell = null;
@@ -495,6 +613,8 @@ class Move {
         this.leftOriginalCell = false;
         this.pointerDown = false;
         this.erasing = false;
+
+
 
         //grid.drawBoard();
     }
@@ -556,6 +676,7 @@ class Move {
     }
 }
 
+
 class Button {
     type;
     x;
@@ -586,6 +707,7 @@ class Button {
         }
     }
 }
+
 
 class Menu {
     basicMargin = 32;
