@@ -162,7 +162,7 @@ function adjustCanvasSize() {
 
 
 class Grid {
-
+    name;
     cells;
 
     cellSize;
@@ -180,7 +180,7 @@ class Grid {
     buttons = [new Button("to-menu"), new Button("clear-cells")];
 
 
-    constructor(levelData) {
+    constructor(name, levelData) {
         let x = levelData[0];
         let y = levelData[1];
         let cluesArray = levelData[2];
@@ -217,11 +217,35 @@ class Grid {
             playerSolution[x][y].push('clue');
         });
 
+        this.name = name;
         this.correctSolutionStr = correctSolutionStr;
         this.playerSolution = playerSolution;
         this.cells = cells;
         this.cellsX = x;
         this.cellsY = y;
+    }
+
+    saveDataToLocalStorage() {
+        window.localStorage.setItem(this.name, JSON.stringify(this.playerSolution));
+    }
+
+    retrieveDataFromLocalStorage() {
+        let data = window.localStorage.getItem(this.name);
+        if (data) {
+            data = JSON.parse(data);
+            for (let i = 0; i < this.cellsX; i++) {
+                for (let j = 0; j < this.cellsY; j++) {
+                    this.cells[i][j].lines.clear();
+                    this.playerSolution[i][j] = [];
+                    for (const info of data[i][j]) {
+                        this.cells[i][j].lines.add(info);
+                        this.playerSolution[i][j].push(info);
+                    }
+                }
+            }
+        }
+        grid.drawBoard();
+        this.manageSolvedState();
     }
 
     checkIfSolved() {
@@ -239,6 +263,7 @@ class Grid {
             this.solved = solved;
             grid.changeCellsColorAndDraw("floralwhite");
         }
+        this.saveDataToLocalStorage();
     }
 
     checkIfValidCell(x, y) {
@@ -830,7 +855,8 @@ function initializeGame(levelName) {
     let levelData = levelsData.get(levelName);
     state = "game";
     move = new Move();
-    grid = new Grid(levelData);
+    grid = new Grid(levelName, levelData);
+    grid.retrieveDataFromLocalStorage();
 
     grid.calculateAllAndDraw();
 }
