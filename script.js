@@ -320,6 +320,8 @@ class Grid {
     calculateCellsSizeAndMargins() {
         let topSpaceHeight = parseInt(0.16 * c.height);
 
+        this.basicMargin = Math.floor(0.035 * c.height);
+
         let boardSizes = fitRectInSpace(this.cellsX, this.cellsY, c.width, c.height - topSpaceHeight, this.basicMargin);
         let boardSizeX = boardSizes[0];
         let boardSizeY = boardSizes[1];
@@ -782,10 +784,10 @@ class Menu {
     }
 
     draw() {
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "crimson";
         ctx.fillRect(0, 0, c.width, c.height);
         //top bar
-        ctx.fillStyle = "crimson";
+        ctx.fillStyle = "coral";
         ctx.fillRect(0, this.topSpaceHeight, c.width, - this.topSpaceHeight);
 
         //bottom square
@@ -807,6 +809,8 @@ class Menu {
 
     calculateTopSpaceHeight() {
         this.topSpaceHeight = parseInt(0.16 * c.height);
+
+        this.basicMargin = Math.floor(0.035 * c.height);
     }
 }
 
