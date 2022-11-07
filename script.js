@@ -241,6 +241,10 @@ class Grid {
         }
     }
 
+    checkIfValidCell(x, y) {
+        return (x >= 0 && x < this.cellsX && y >= 0 && y < this.cellsY)
+    }
+
     createArrayOfSolve() {
         let arr = [];
         for (let i = 0; i < this.cellsX; i++) {
@@ -362,8 +366,8 @@ class Grid {
     }
 
     convertCoordinatesToCells(coordinate_x, coordinate_y) {
-        let x = parseInt((coordinate_x - this.cellsContainerTranslationX) / this.cellSize);
-        let y = parseInt((coordinate_y - this.cellsContainerTranslationY) / this.cellSize);
+        let x = Math.floor((coordinate_x - this.cellsContainerTranslationX) / this.cellSize);
+        let y = Math.floor((coordinate_y - this.cellsContainerTranslationY) / this.cellSize);
 
         return [x, y];
     }
@@ -546,19 +550,17 @@ class Move {
     loadNewDownInput(coordinateX, coordinateY) {
         let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
 
-        //place for validator
-        this.startCell = cellCoordinates;
-        this.pointerDown = true;
-
-        //grid.drawBoard();
+        if (grid.checkIfValidCell(cellCoordinates[0], cellCoordinates[1])) {
+            this.startCell = cellCoordinates;
+            this.pointerDown = true;
+        }
     }
 
     //loadNewMoveInput(grid, coordinateX, coordinateY) {
     loadNewMoveInput(coordinateX, coordinateY) {
-        //place for validator
-        if (this.pointerDown) {
-            let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
+        let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
 
+        if (this.pointerDown && grid.checkIfValidCell(cellCoordinates[0], cellCoordinates[1])) {
             if (this.startCell[0] != cellCoordinates[0] || this.startCell[1] != cellCoordinates[1]) {
                 this.leftOriginalCell = true;
                 if (this.transitCell == null) {
@@ -588,24 +590,22 @@ class Move {
 
     //loadNewUpInput(grid, coordinateX, coordinateY) {
     loadNewUpInput(coordinateX, coordinateY) {
+        console.log("UPP", coordinateX, coordinateY);
+        console.log(grid.convertCoordinatesToCells(coordinateX, coordinateY));
         if (this.leftOriginalCell == false) {
             let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
             let x = cellCoordinates[0];
             let y = cellCoordinates[1];
 
-
-            grid.cells[x][y].click();
-            grid.cells[x][y].draw();
-
-            grid.playerSolution[x][y] = Array.from(grid.cells[x][y].lines).sort();
-
-            console.log("up");
-            grid.manageSolvedState();
-
-            // if (JSON.stringify(grid.playerSolution) == JSON.stringify(solution)) {
-            //     console.log("BINGOOOOO");
-            //     grid.changeCellsColorAndDraw("limegreen");
-            // }
+            if (grid.checkIfValidCell(x, y)) {
+                grid.cells[x][y].click();
+                grid.cells[x][y].draw();
+    
+                grid.playerSolution[x][y] = Array.from(grid.cells[x][y].lines).sort();
+    
+                console.log("up");
+                grid.manageSolvedState();
+            }
         }
 
         this.startCell = null;
