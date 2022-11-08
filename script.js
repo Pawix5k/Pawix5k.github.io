@@ -113,7 +113,6 @@ function longestSubtitle() {
     let maxLength = 0;
     for (let i = 0; i < tutorialSubtitles.length; i++) {
         for (let j = 0; j < tutorialSubtitles[i].length; j++) {
-            console.log(tutorialSubtitles[i][j]);
             if (tutorialSubtitles[i][j].length > maxLength) {
                 maxLength = tutorialSubtitles[i][j].length;
             }
@@ -375,7 +374,6 @@ class Grid {
     }
 
     checkIfSolved() {
-        console.log(JSON.stringify(grid.playerSolution) == this.correctSolutionStr);
         return JSON.stringify(grid.playerSolution) == this.correctSolutionStr;
     }
 
@@ -630,13 +628,11 @@ class Tutorial extends Grid {
     loadState(n) {
         this.clearCells();
         for (const info of tutorialStateArray[n]) {
-            console.log(info);
             this.cells[info[0]][info[1]].lines.add(info[2]);
         }
     }
 
     runSlide() {
-        console.log("run", this.slide);
         if (this.slide == 0) {
             this.buttons[1].visible = false;
             this.buttons[1].clickable = false;
@@ -754,26 +750,21 @@ class Tutorial extends Grid {
 
         //fitRectInSpace();
         let fontSize = calculateMaxFontSize(4, tutorialSubtitlesMaxLength, c.width - 0 * this.basicMargin, this.bottomPanelHeight - this.basicMargin);
-        console.log(fontSize);
         drawTextInBox(c.width, this.bottomPanelHeight, c.height - this.bottomPanelHeight, this.slide, fontSize);
     }
 
     nextSlide() {
-        console.log("next before", this.slide);
         if (this.slide < this.lastSlide) {
             this.slide = this.slide + 1;
             this.runSlide();
         }
-        console.log("next after", this.slide);
     }
 
     previousSlide() {
-        console.log("prev before", this.slide);
         if (this.slide > 0) {
             this.slide = this.slide - 1;
             this.runSlide();
         }
-        console.log("prev after", this.slide);
     }
 
     drawBoard() {
@@ -1005,7 +996,6 @@ class Move {
                 grid.playerSolution[x2][y2] = Array.from(grid.cells[x2][y2].lines).sort();
 
                 this.startCell = cellCoordinates;
-                console.log("move");
                 grid.manageSolvedState();
             }
         }
@@ -1013,8 +1003,6 @@ class Move {
 
     //loadNewUpInput(grid, coordinateX, coordinateY) {
     loadNewUpInput(coordinateX, coordinateY) {
-        console.log("UPP", coordinateX, coordinateY);
-        console.log(grid.convertCoordinatesToCells(coordinateX, coordinateY));
         if (this.leftOriginalCell == false) {
             let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
             let x = cellCoordinates[0];
@@ -1026,7 +1014,6 @@ class Move {
     
                 grid.playerSolution[x][y] = Array.from(grid.cells[x][y].lines).sort();
     
-                console.log("up");
                 grid.manageSolvedState();
             }
         }
@@ -1109,6 +1096,8 @@ class Button {
     visible = true;
     clickable = true;
 
+    progress;
+
     constructor(type) {
         this.type = type;
     }
@@ -1117,6 +1106,21 @@ class Button {
         if (this.visible) {
             ctx.fillStyle = "beige";
             ctx.fillRect(this.x, this.y, this.size, this.size);
+
+            switch (this.progress) {
+                case "new":
+                    ctx.fillStyle = "green";
+                    ctx.fillRect(this.x, this.y, this.size, this.size);
+                    break;
+                case "started":
+                    ctx.fillStyle = "blue";
+                    ctx.fillRect(this.x, this.y, this.size, this.size);
+                    break;
+                case "finished":
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(this.x, this.y, this.size, this.size);
+                    break;
+            }
         }
     }
 
@@ -1181,6 +1185,19 @@ class Menu {
         for (const name of levelsData.keys()) {
             let btn = new Button("level");
             btn.levelName = name;
+
+            if (window.localStorage.getItem(name)){
+                let levelData = levelsData.get(name);
+                if (levelData[3] == window.localStorage.getItem(name)) {
+                    btn.progress = "finished";
+                }
+                else {
+                    btn.progress = "started";
+                }
+            }
+            else {
+                btn.progress = "new";
+            }
             this.levelButtons.push(btn);
         }
     }
@@ -1274,7 +1291,6 @@ function directionInOriginalCell(startCell, endCell) {
 }
 
 function calculateMaxFontSize(lines, maxLength, boxX, boxY) {
-    console.log(lines, maxLength, boxX, boxY);
     let x = maxLength * 0.55;
     let y = lines;
 
@@ -1289,15 +1305,9 @@ function drawTextInBox(width, height, translationY, n, fontSize) {
     ctx.textAlign = "center";
     ctx.font = font;
 
-    //console.log(ctx.measureText("We can mark the cell next to the black block, since we know we cannot"));
-
-    console.log(tutorialSubtitles[n]);
     for (let i = 0; i < tutorialSubtitles[n].length; i++) {
-        console.log(tutorialSubtitles[n][i], width / 2, translationY + (i + 1) * fontSize);
         ctx.fillText(tutorialSubtitles[n][i], width / 2, translationY + (i + 1) * fontSize);
     }
-
-    //console.log(ctx.measureText(text1));
 }
 
 var move;
