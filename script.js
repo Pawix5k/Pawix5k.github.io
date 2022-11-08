@@ -5,6 +5,10 @@ var ctx = c.getContext("2d");
 c.width = window.innerWidth;
 c.height = window.innerHeight;
 
+// var colors = {
+//     winningCell: ""
+// }
+
 
 
 window.addEventListener('resize', adjustCanvasSize);
@@ -44,40 +48,71 @@ levelsData.set("manual3", [7, 10, [[0, 6, "down", 0], [1, 1, "right", 2], [2, 6,
 [["down","left"],["down","up"],["down","up"],["left","up"],["solid"],["down","left"],["down","up"],["down","up"],["left","up"],["clue"]]]'
 ]);
 
-// var solutionStr = '[[["clue"],["solid"],["clue"],["down","right"],["right","up"],["solid"]],\
-// [["down","right"],["down","up"],["down","up"],["left","up"],["left","right"],["clue"]],\
-// [["down","left"],["right","up"],["clue"],["down","right"],["left","up"],["solid"]],\
-// [["down","right"],["left","up"],["solid"],["down","left"],["down","up"],["right","up"]],\
-// [["left","right"],["down","right"],["down","up"],["right","up"],["down","right"],["left","up"]],\
-// [["down","left"],["left","up"],["solid"],["down","left"],["left","up"],["solid"]]]';
 
-// var solutionsStr2 = '[[["down","right"],["down","up"],["down","up"],["down","up"],["down","up"],["down","up"],["right","up"],["clue"]],\
-// [["left","right"],["solid"],["clue"],["down","right"],["down","up"],["right","up"],["down","left"],["right","up"]],\
-// [["left","right"],["down","right"],["down","up"],["left","up"],["down","right"],["left","up"],["down","right"],["left","up"]],\
-// [["left","right"],["left","right"],["clue"],["solid"],["left","right"],["solid"],["left","right"],["solid"]],\
-// [["left","right"],["down","left"],["down","up"],["right","up"],["down","left"],["right","up"],["down","left"],["right","up"]],\
-// [["down","left"],["down","up"],["down","up"],["left","up"],["clue"],["down","left"],["down","up"],["left","up"]]]';
-
-// var solutionStr3 = '[[["down","right"],["down","up"],["down","up"],["down","up"],["down","up"],["right","up"],["clue"],["down","right"],["down","up"],["right","up"]],\
-// [["left","right"],["clue"],["down","right"],["down","up"],["right","up"],["down","left"],["down","up"],["left","up"],["down","right"],["left","up"]],\
-// [["left","right"],["solid"],["down","left"],["right","up"],["down","left"],["right","up"],["clue"],["down","right"],["left","up"],["solid"]],\
-// [["down","left"],["right","up"],["clue"],["left","right"],["clue"],["down","left"],["right","up"],["down","left"],["down","up"],["right","up"]],\
-// [["down","right"],["left","up"],["down","right"],["left","up"],["solid"],["down","right"],["left","up"],["clue"],["down","right"],["left","up"]],\
-// [["left","right"],["solid"],["down","left"],["right","up"],["clue"],["left","right"],["clue"],["solid"],["left","right"],["solid"]],\
-// [["down","left"],["down","up"],["down","up"],["left","up"],["solid"],["down","left"],["down","up"],["down","up"],["left","up"],["clue"]]]';
-
-// varSolutionStrTutorial = '[[["clue"],["solid"],["clue"],["solid"]],\
-// [["down","right"],["down","up"],["down","up"],["right","up"]],\
-// [["left","right"],["down","right"],["down","up"],["left","up"]],\
-// [["down","left"],["left","up"],["solid"],["clue"]]]';
+var tutorialStateArray = [];
 
 
-// var levelsData = [
-//     [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 2]]],
-//     [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 3]]],
-//     [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 4]]],
-//     [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 5]]]
-// ];
+
+function loadTutorialStateArray() {
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([[1, 1, "solid"]]);
+    
+    tutorialStateArray.push([[1, 1, "down"], [1, 1, "right"]]);
+    tutorialStateArray.push([[1, 1, "non-solid"]]);
+    tutorialStateArray.push([[1, 1, "solid"], [2, 1, "solid"]]);
+    tutorialStateArray.push([[1, 1, "solid"], [2, 2, "solid"]]);
+    
+    tutorialStateArray.push([[1, 2, "solid"]]);
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([]);
+    
+    tutorialStateArray.push([[0, 3, "solid"]]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 3, "non-solid"]]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"]
+    ]);
+    
+    
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "right"], [2, 2, "left"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 0, "non-solid"], [2, 0, "non-solid"], [3, 0, "non-solid"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
+        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"]
+    ]);
+    
+    
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
+        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
+        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"], [0, 1, "solid"], [3, 2, "solid"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
+        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"], [0, 1, "solid"], [3, 2, "solid"],
+        [2, 2, "up"], [2, 1, "down"], [2, 1, "right"], [3, 1, "left"]
+    ]);
+}
 
 
 c.addEventListener('mousedown', (event) => {
@@ -116,6 +151,8 @@ function handleStartInput(x, y) {
         case 'game':
             move.loadNewDownInput(x, y);
             break;
+        case 'tutorial':
+            break;
     }
 }
 
@@ -125,6 +162,8 @@ function handleMoveInput(x, y) {
             break;
         case 'game':
             move.loadNewMoveInput(x, y);
+            break;
+        case 'tutorial':
             break;
     }
 }
@@ -138,6 +177,9 @@ function handleEndInput(x, y) {
         case 'game':
             grid.checkCollisionWithButtons(x, y);
             move.loadNewUpInput(x, y);
+            break;
+        case 'tutorial':
+            tutorial.checkCollisionWithButtons(x, y);
             break;
     }
 }
@@ -156,6 +198,9 @@ function adjustCanvasSize() {
             break;
         case "game":
             grid.calculateAllAndDraw();
+            break;
+        case "tutorial":
+            tutorial.calculateAllAndDraw();
             break;
     }
 }
@@ -282,9 +327,11 @@ class Grid {
 
         let str = '[';
         for (const line of arr) {
-            str += JSON.stringify(line) + ',\\\n';
+            //str += JSON.stringify(line) + ',\\\n';
+            str += JSON.stringify(line) + ',\n';
         }
-        str = str.slice(0, -3);
+        //str = str.slice(0, -3);
+        str = str.slice(0, -2);
         str += ']';
 
         console.log(str);
@@ -299,10 +346,10 @@ class Grid {
     }
 
     calculateAllAndDraw() {
-        grid.calculateCellsSizeAndMargins();
-        grid.calculateCellsPositions();
-        grid.calculateButtonsPositionsAndSize();
-        grid.drawBoard()
+        this.calculateCellsSizeAndMargins();
+        this.calculateCellsPositions();
+        this.calculateButtonsPositionsAndSize();
+        this.drawBoard()
     }
 
     calculateButtonsPositionsAndSize() {
@@ -408,8 +455,261 @@ class Grid {
                 }
             }
         }
+    }
+}
+
+
+class Tutorial extends Grid {
+    buttons = [new Button("to-menu"), new Button("previous-slide"), new Button("next-slide")];
+    sidePanelsWidth;
+    bottomPanelHeight;
+    slide = 0;
+    lastSlide = tutorialStateArray.length - 1;
+
+    constructor(name, levelData) {
+        super(name, levelData);
+    }
+
+    calculateAllAndDraw() {
+        this.calculateCellsSizeAndMargins();
+        this.calculateCellsPositions();
+        this.calculateButtonsPositionsAndSize();
+        this.runSlide(this.slide);
+        this.drawBoard()
+    }
+
+    calculateCellsSizeAndMargins() {
+        let topSpaceHeight = parseInt(0.16 * c.height);
+        let bottomSpaceHeight = parseInt(0.22 * c.height);
+        let sidePanelsWidth = parseInt(0.2 * c.width);
+        let basicMargin = Math.floor(0.035 * c.height);
+
+        let boardSizes = fitRectInSpace(this.cellsX,
+            this.cellsY,
+            c.width - 2 * sidePanelsWidth,
+            c.height - topSpaceHeight - bottomSpaceHeight,
+            basicMargin);
+        let boardSizeX = boardSizes[0];
+        let boardSizeY = boardSizes[1];
+        let cellSize = Math.min(parseInt(boardSizeX / this.cellsX), parseInt(boardSizeY / this.cellsY));
+
+        this.basicMargin = basicMargin;
+        this.topSpaceHeight = topSpaceHeight;
+        this.bottomPanelHeight = bottomSpaceHeight;
+        this.sidePanelsWidth = sidePanelsWidth;
+        this.cellSize = cellSize;
+        this.cellsContainerTranslationX = parseInt((c.width - boardSizeX) / 2);
+        this.cellsContainerTranslationY = parseInt((c.height - topSpaceHeight - bottomSpaceHeight - boardSizeY) / 2 + topSpaceHeight);
+    }
+
+    calculateButtonsPositionsAndSize() {
+        let sizeOfTopButton = fitRectInSpace(1, 1, c.width, this.topSpaceHeight, this.basicMargin)[0];
+        this.buttons[0].size = sizeOfTopButton;
+        this.buttons[0].x = this.basicMargin;
+        this.buttons[0].y = this.basicMargin;
+
+        let maxSizeInPanel = fitRectInSpace(1, 1, this.sidePanelsWidth, c.height - this.topSpaceHeight - this.bottomPanelHeight, 0)[0];
+        let sizeOfSideButtons;
+        if (maxSizeInPanel > sizeOfTopButton) {
+            sizeOfSideButtons = sizeOfTopButton;
+        }
+        else {
+            sizeOfSideButtons = maxSizeInPanel;
+        }
+        this.buttons[1].size = sizeOfSideButtons;
+        this.buttons[2].size = sizeOfSideButtons;
+        this.buttons[1].x = this.sidePanelsWidth - sizeOfSideButtons;
+        this.buttons[2].x = c.width - this.sidePanelsWidth;
+        this.buttons[1].y = parseInt((c.height - this.topSpaceHeight - this.bottomPanelHeight - sizeOfSideButtons) / 2 + this.topSpaceHeight);
+        this.buttons[2].y = parseInt((c.height - this.topSpaceHeight - this.bottomPanelHeight - sizeOfSideButtons) / 2 + this.topSpaceHeight);
+    }
+
+    makeNaviagationButtonsVisible() {
+        this.buttons[1].visible = true;
+        this.buttons[1].clickable = true;
+        this.buttons[2].visible = true;
+        this.buttons[2].clickable = true;
+    }
+
+    loadStateFromArray(n) {
+        for (let i = 0; i < this.cellsX; i++) {
+            for (let j = 0; j < this.cellsY; j++) {
+                if (!this.cells[i][j].lines.has("clue")){
+                    this.cells[i][j].lines.clear();
+                    for (const info of tutorialStateArray[n][i][j]) {
+                        this.cells[i][j].lines.add(info);
+                    }
+                }
+            }
+        }
+    }
+
+    loadState(n) {
+        this.clearCells();
+        for (const info of tutorialStateArray[n]) {
+            console.log(info);
+            this.cells[info[0]][info[1]].lines.add(info[2]);
+        }
+    }
+
+    runSlide() {
+        if (this.slide == 0) {
+            this.buttons[1].visible = false;
+            this.buttons[1].clickable = false;
+        }
+        else if (this.slide == this.lastSlide) {
+            this.buttons[2].visible = false;
+            this.buttons[2].clickable = false;
+        }
+        else {
+            this.makeNaviagationButtonsVisible();
+        }
+
+        this.loadState(this.slide);
+        
+        switch (this.slide) {
+            case 1:
+                this.drawBackground();
+                this.cells[0][0].draw();
+                this.cells[0][2].draw();
+                this.cells[3][3].draw();
+                break;
+            case 2:
+                this.drawBackground();
+                for (const col of this.cells) {
+                    for (const cell of col) {
+                        if (!cell.lines.has("clue")) {
+                            cell.draw();
+                        }
+                    }
+                }
+                break;
+            case 3:
+            case 4:
+            case 5:
+                this.drawBackground();
+                this.cells[1][1].draw();
+                break;
+            case 6:
+                this.drawBackground();
+                this.cells[1][1].draw();
+                this.cells[2][1].draw();
+                break;
+            case 7:
+                this.drawBackground();
+                this.cells[1][1].draw();
+                this.cells[2][2].draw();
+                break;
+            case 8:
+                this.drawBackground();
+                this.cells[0][2].draw();
+                this.cells[1][2].draw();
+                break;
+            case 9:
+                this.drawBoard();
+                this.cells[0][0].draw("Khaki");
+                this.cells[1][0].draw("Khaki");
+                this.cells[2][0].draw("Khaki");
+                this.cells[3][0].draw("Khaki");
+                break;
+            case 10:
+                this.drawBoard();
+                this.cells[3][0].draw("Khaki");
+                this.cells[3][1].draw("Khaki");
+                this.cells[3][2].draw("Khaki");
+                this.cells[3][3].draw("Khaki");
+                break;
+            case 11:
+                this.drawBoard();
+                this.cells[0][2].draw("Khaki");
+                this.cells[0][3].draw("Khaki");
+                break;
+            case 13:
+                this.drawBoard();
+                this.cells[1][3].draw("Khaki");
+                break;
+            case 14:
+                this.drawBoard();
+                this.cells[1][2].draw("Khaki");
+                this.cells[1][3].draw("Khaki");
+                this.cells[2][3].draw("Khaki");
+                break;
+            case 15:
+                this.drawBoard();
+                this.cells[2][3].draw("Khaki");
+                this.cells[2][2].draw("Khaki");
+                break;
+            case 16:
+                this.drawBoard();
+                this.cells[1][2].draw("Khaki");
+                this.cells[2][2].draw("Khaki");
+                break;
+            case 18:
+                this.drawBoard();
+                this.cells[0][0].draw("Khaki");
+                this.cells[1][0].draw("Khaki");
+                this.cells[2][0].draw("Khaki");
+                this.cells[3][0].draw("Khaki");
+                break;
+            case 20:
+                this.drawBoard();
+                this.cells[0][1].draw("Khaki");
+                this.cells[3][2].draw("Khaki");
+                break;
+            case 22:
+                this.drawBackground();
+                for (const col of this.cells) {
+                    for (const cell of col) {
+                        cell.draw("LightGreen");
+                    }
+                }
+                break;
+            default:
+                this.drawBoard();
+        }
+    }
+
+    nextSlide() {
+        if (this.slide < this.lastSlide) {
+            this.slide += 1;
+            this.runSlide();
+        }
+    }
+
+    previousSlide() {
+        if (this.slide > 0) {
+            this.slide -= 1;
+            this.runSlide();
+        }
+    }
+
+    drawBoard() {
+        this.drawBackground();
         this.drawCells();
-        this.manageSolvedState();
+    }
+
+    drawBackground() {
+        ctx.fillStyle = "Tomato";
+        ctx.fillRect(0, 0, c.width, c.height);
+
+        // //draw top bar
+        // ctx.fillStyle = "coral";
+        // ctx.fillRect(0, 0, c.width, this.topSpaceHeight);
+
+        // //draw bottom bar
+        // ctx.fillStyle = "aqua";
+        // ctx.fillRect(0, c.height - this.bottomPanelHeight, c.width, this.bottomPanelHeight);
+
+        // //draw left side panel
+        // ctx.fillStyle = "darkseagreen";
+        // ctx.fillRect(0, this.topSpaceHeight, this.sidePanelsWidth, c.height - this.topSpaceHeight - this.bottomPanelHeight);
+
+        // //draw left side panel
+        // ctx.fillStyle = "darksalmon";
+        // ctx.fillRect(c.width - this.sidePanelsWidth, this.topSpaceHeight, this.sidePanelsWidth, c.height - this.topSpaceHeight - this.bottomPanelHeight);
+
+        //draw buttons
+        this.buttons.forEach((element) => element.draw());
     }
 }
 
@@ -558,6 +858,8 @@ class Cell {
     }
 
     draw(color = this.color) {
+        ctx.fillStyle = "black";
+        ctx.fillRect(this.pos_x - 2, this.pos_y - 2, this.size + 4, this.size + 4);
         // border
         ctx.fillStyle = color;
         ctx.fillRect(this.pos_x + 2, this.pos_y + 2, this.size - 4, this.size - 4);
@@ -710,27 +1012,43 @@ class Button {
     y;
     size;
     levelName;
+    visible = true;
+    clickable = true;
 
     constructor(type) {
         this.type = type;
     }
 
     draw() {
-        ctx.fillStyle = "beige";
-        ctx.fillRect(this.x, this.y, this.size, this.size);
+        if (this.visible) {
+            ctx.fillStyle = "beige";
+            ctx.fillRect(this.x, this.y, this.size, this.size);
+        }
     }
 
     triggerAction() {
-        switch(this.type) {
-            case "level":
-                initializeGame(this.levelName);
-                break;
-            case "to-menu":
-                initializeMenu();
-                break;
-            case "clear-cells":
-                grid.clearCells();
-                break;
+        if (this.clickable) {
+            switch(this.type) {
+                case "level":
+                    initializeGame(this.levelName);
+                    break;
+                case "to-menu":
+                    initializeMenu();
+                    break;
+                case "clear-cells":
+                    grid.clearCells();
+                    grid.manageSolvedState();
+                    break;
+                case "next-slide":
+                    tutorial.nextSlide();
+                    break;
+                case "previous-slide":
+                    tutorial.previousSlide();
+                    break;
+                case "to-tutorial":
+                    initializeTutorial();
+                    break;
+            }
         }
     }
 }
@@ -746,9 +1064,15 @@ class Menu {
     levelsContainerTranslationY;
 
     levelButtons = [];
+    buttons = [new Button("to-tutorial")];
 
     checkCollisionWithButtons(x, y) {
         this.levelButtons.forEach((element) => {
+            if (x >= element.x && x <= element.x + element.size && y >= element.y && y <= element.y + element.size) {
+                element.triggerAction();
+            }
+        });
+        this.buttons.forEach((element) => {
             if (x >= element.x && x <= element.x + element.size && y >= element.y && y <= element.y + element.size) {
                 element.triggerAction();
             }
@@ -780,6 +1104,11 @@ class Menu {
             this.levelButtons[i].size = buttonSize;
             this.levelButtons[i].x = this.levelsContainerTranslationX + (column + 1) * spaceBetween + column * buttonSize;
             this.levelButtons[i].y = this.levelsContainerTranslationY + (row + 1) * spaceBetween + row * buttonSize;
+
+            let sizeOfTopButton = fitRectInSpace(1, 1, c.width, this.topSpaceHeight, this.basicMargin)[0];
+            this.buttons[0].size = sizeOfTopButton;
+            this.buttons[0].x = this.basicMargin;
+            this.buttons[0].y = this.basicMargin;
         }
     }
 
@@ -796,6 +1125,7 @@ class Menu {
 
         //levelButtons
         this.levelButtons.forEach(element => element.draw());
+        this.buttons.forEach(element => element.draw());
     }
 
     calculateContainerVariables() {
@@ -853,6 +1183,7 @@ function directionInOriginalCell(startCell, endCell) {
 var move;
 var grid;
 var menu;
+var tutorial;
 
 
 function initializeGame(levelName) {
@@ -873,6 +1204,14 @@ function initializeMenu() {
     menu.addLevelButtons();
     menu.calculateButtonsPositionsAndSize(4);
     menu.draw();
+}
+
+function initializeTutorial() {
+    state = "tutorial";
+    loadTutorialStateArray();
+    let levelData = levelsData.get("tutorial");
+    tutorial = new Tutorial("tutorial", levelData);
+    tutorial.calculateAllAndDraw();
 }
 
 initializeMenu();
