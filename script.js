@@ -52,6 +52,78 @@ levelsData.set("manual3", [7, 10, [[0, 6, "down", 0], [1, 1, "right", 2], [2, 6,
 var tutorialStateArray;
 
 
+var tutorialSubtitles = [
+    ['Goal of this game is to draw a single', 'loop going through each cell.'],
+    ['Number in clue indicates how many black',
+     'blocks are between them and the puzzle',
+     'wall indicated by the arrow direction.'],
+    ['You must fill all the empty cells with', 'either lines, or black blocks.'],
+    ['Click/tap twice on empty cell, or once',
+     'on occupied cell to draw black block.'],
+    ['Each segment of the loop contains lines',
+     'going out in two directions. Slide over',
+     'the cells to draw a line. Slide again to',
+     'erase it.'],
+    ['You can place a marker meaning the cell',
+     'cannot be occupied by a black block.'],
+    ['You cannot place two black blocks next',
+     'to each other (sharing sides)...'],
+    ['but tou can place them diagonally', '(touching corners).'],
+    ['You can place a black block next to a', 'clue cell.'],
+    ['Clue with 0 and arrow pointing right',
+     'means there are no black blocks in the',
+     'yellow area.'],
+    ['Clue with 1 and arrow pointing up means',
+     'there is exactly one black block in the',
+     'yellow area, but we do not know where',
+     'yet.'],
+    ['Clue with 1 and arrow pointing down', 'points to only one cell...'],
+    ['so we know we must place a black block', 'there.'],
+    ['We can mark the cell next to the black',
+     'block, since we know we cannot place',
+     'another black block next to it, or solve',
+     'it rightaway.'],
+    ['Each segment of the loop contains 2',
+     'lines going in different directions.We',
+     'cannot go left (black block) or down',
+     '(wall) so we can only go up and right.'],
+    ['The only possible direction for this',
+     'section of line is up (clue on the',
+     'right, wall of the puzzle below).'],
+    ['We cannot link the line to make a loop',
+     'yet, because we would leftremaining',
+     'cells blank...'],
+    ['So we can only make this segment of the', 'loop go up.'],
+    ['This clue indicates there cannot be any',
+     'black blocks in the yellow area, so',
+     'wecan put markers on the cells inside',
+     'it...'],
+    ['and then solve like the previous parts.'],
+    ['Yellow cell on the left is blocked from',
+     'all 4 sides, and the yellow cell on the',
+     'right is the only empty cell left',
+     'pointed by the right bottom clue...'],
+    ['which means we must place black blocks', 'in them.'],
+    ['We can finally link two ends of the', 'line and solve the puzzle.']
+];
+
+var tutorialSubtitlesMaxLength = longestSubtitle();
+
+function longestSubtitle() {
+    let maxLength = 0;
+    for (let i = 0; i < tutorialSubtitles.length; i++) {
+        for (let j = 0; j < tutorialSubtitles[i].length; j++) {
+            console.log(tutorialSubtitles[i][j]);
+            if (tutorialSubtitles[i][j].length > maxLength) {
+                maxLength = tutorialSubtitles[i][j].length;
+            }
+        }
+    }
+
+    return maxLength;
+}
+
+
 
 function loadTutorialStateArray() {
     tutorialStateArray = [];
@@ -670,6 +742,11 @@ class Tutorial extends Grid {
             default:
                 this.drawBoard();
         }
+
+        //fitRectInSpace();
+        let fontSize = calculateMaxFontSize(4, tutorialSubtitlesMaxLength, c.width - 2 * this.basicMargin, this.bottomPanelHeight - this.basicMargin);
+        console.log(fontSize);
+        drawTextInBox(c.width, this.bottomPanelHeight, c.height - this.bottomPanelHeight, this.slide, fontSize);
     }
 
     nextSlide() {
@@ -703,7 +780,7 @@ class Tutorial extends Grid {
         // ctx.fillStyle = "coral";
         // ctx.fillRect(0, 0, c.width, this.topSpaceHeight);
 
-        // //draw bottom bar
+        //draw bottom bar
         // ctx.fillStyle = "aqua";
         // ctx.fillRect(0, c.height - this.bottomPanelHeight, c.width, this.bottomPanelHeight);
 
@@ -811,6 +888,7 @@ class Cell {
                 break;
             case 'clue':
                 ctx.fillStyle = this.solidColor;
+                ctx.textAlign = "left";
                 let font = (this.size * 0.55).toString().concat('px sans-serif');
                 ctx.font = font;
                 ctx.fillText(this.clueNumber.toString(), this.center_x - this.size * 0.3, this.center_y + this.size * 0.3);
@@ -1185,6 +1263,33 @@ function directionInOriginalCell(startCell, endCell) {
             return 'right'
         }
     }
+}
+
+function calculateMaxFontSize(lines, maxLength, boxX, boxY) {
+    console.log(lines, maxLength, boxX, boxY);
+    let x = maxLength * 0.55;
+    let y = lines;
+
+    let box = fitRectInSpace(x, y, boxX, boxY, 0);
+
+    return box[1] / lines;
+}
+
+function drawTextInBox(width, height, translationY, n, fontSize) {
+    let font = (fontSize).toString().concat('px consolas');
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.font = font;
+
+    console.log(ctx.measureText("We can mark the cell next to the black block, since we know we cannot"));
+
+    console.log(tutorialSubtitles[n]);
+    for (let i = 0; i < tutorialSubtitles[n].length; i++) {
+        console.log(tutorialSubtitles[n][i], width / 2, translationY + (i + 1) * fontSize);
+        ctx.fillText(tutorialSubtitles[n][i], width / 2, translationY + (i + 1) * fontSize);
+    }
+
+    //console.log(ctx.measureText(text1));
 }
 
 var move;
