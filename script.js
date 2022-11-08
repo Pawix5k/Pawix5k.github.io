@@ -49,11 +49,13 @@ levelsData.set("manual3", [7, 10, [[0, 6, "down", 0], [1, 1, "right", 2], [2, 6,
 ]);
 
 
-var tutorialStateArray = [];
+var tutorialStateArray;
 
 
 
 function loadTutorialStateArray() {
+    tutorialStateArray = [];
+
     tutorialStateArray.push([]);
     tutorialStateArray.push([]);
     tutorialStateArray.push([]);
@@ -464,10 +466,11 @@ class Tutorial extends Grid {
     sidePanelsWidth;
     bottomPanelHeight;
     slide = 0;
-    lastSlide = tutorialStateArray.length - 1;
+    lastSlide;
 
     constructor(name, levelData) {
         super(name, levelData);
+        this.lastSlide = tutorialStateArray.length - 1;
     }
 
     calculateAllAndDraw() {
@@ -475,7 +478,6 @@ class Tutorial extends Grid {
         this.calculateCellsPositions();
         this.calculateButtonsPositionsAndSize();
         this.runSlide(this.slide);
-        this.drawBoard()
     }
 
     calculateCellsSizeAndMargins() {
@@ -553,6 +555,7 @@ class Tutorial extends Grid {
     }
 
     runSlide() {
+        console.log("run", this.slide);
         if (this.slide == 0) {
             this.buttons[1].visible = false;
             this.buttons[1].clickable = false;
@@ -670,17 +673,21 @@ class Tutorial extends Grid {
     }
 
     nextSlide() {
+        console.log("next before", this.slide);
         if (this.slide < this.lastSlide) {
-            this.slide += 1;
+            this.slide = this.slide + 1;
             this.runSlide();
         }
+        console.log("next after", this.slide);
     }
 
     previousSlide() {
+        console.log("prev before", this.slide);
         if (this.slide > 0) {
-            this.slide -= 1;
+            this.slide = this.slide - 1;
             this.runSlide();
         }
+        console.log("prev after", this.slide);
     }
 
     drawBoard() {
@@ -1113,14 +1120,14 @@ class Menu {
     }
 
     draw() {
-        ctx.fillStyle = "crimson";
+        ctx.fillStyle = "Tomato";
         ctx.fillRect(0, 0, c.width, c.height);
         //top bar
-        ctx.fillStyle = "coral";
-        ctx.fillRect(0, this.topSpaceHeight, c.width, - this.topSpaceHeight);
+        // ctx.fillStyle = "coral";
+        // ctx.fillRect(0, this.topSpaceHeight, c.width, - this.topSpaceHeight);
 
         //bottom square
-        ctx.fillStyle = "coral";
+        ctx.fillStyle = "#47FFB1";
         ctx.fillRect(this.levelsContainerTranslationX, this.levelsContainerTranslationY, this.levelsContainerX, this.levelsContainerY);
 
         //levelButtons
