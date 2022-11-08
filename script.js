@@ -744,7 +744,7 @@ class Tutorial extends Grid {
         }
 
         //fitRectInSpace();
-        let fontSize = calculateMaxFontSize(4, tutorialSubtitlesMaxLength, c.width - 2 * this.basicMargin, this.bottomPanelHeight - this.basicMargin);
+        let fontSize = calculateMaxFontSize(4, tutorialSubtitlesMaxLength, c.width - 1 * this.basicMargin, this.bottomPanelHeight - this.basicMargin);
         console.log(fontSize);
         drawTextInBox(c.width, this.bottomPanelHeight, c.height - this.bottomPanelHeight, this.slide, fontSize);
     }
@@ -1276,8 +1276,8 @@ function calculateMaxFontSize(lines, maxLength, boxX, boxY) {
 }
 
 function drawTextInBox(width, height, translationY, n, fontSize) {
-    let font = (fontSize).toString().concat('px consolas');
-    ctx.fillStyle = "black";
+    let font = (fontSize).toString().concat('px Cabin');
+    ctx.fillStyle = "#2A2A2A";
     ctx.textAlign = "center";
     ctx.font = font;
 
