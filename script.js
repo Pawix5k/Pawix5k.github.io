@@ -289,6 +289,7 @@ class Grid {
     cellsX;
     cellsY;
     topSpaceHeight;
+    bottomPanelHeight
     cellsContainerTranslationX;
     cellsContainerTranslationY;
 
@@ -440,15 +441,17 @@ class Grid {
 
     calculateCellsSizeAndMargins() {
         let topSpaceHeight = parseInt(0.16 * c.height);
+        let bottomPanelHeight = Math.floor(0.1 * c.height);
 
         this.basicMargin = Math.floor(0.035 * c.height);
 
-        let boardSizes = fitRectInSpace(this.cellsX, this.cellsY, c.width, c.height - topSpaceHeight, this.basicMargin);
+        let boardSizes = fitRectInSpace(this.cellsX, this.cellsY, c.width, c.height - topSpaceHeight - bottomPanelHeight, this.basicMargin);
         let boardSizeX = boardSizes[0];
         let boardSizeY = boardSizes[1];
         let cellSize = Math.min(parseInt(boardSizeX / this.cellsX), parseInt(boardSizeY / this.cellsY));
 
         this.topSpaceHeight = topSpaceHeight;
+        this.bottomPanelHeight = bottomPanelHeight;
         this.cellSize = cellSize;
         this.cellsContainerTranslationX = parseInt((c.width - boardSizeX) / 2);
         this.cellsContainerTranslationY = parseInt((c.height - topSpaceHeight - boardSizeY) / 2 + topSpaceHeight);
