@@ -14,14 +14,14 @@ c.height = window.innerHeight;
 window.addEventListener('resize', adjustCanvasSize);
 
 var state = "menu";
-
-var levelsData = new Map()
-levelsData.set("tutorial", [4, 4, [[0, 0, "right", 0], [0, 2, "down", 1], [3, 3, "up", 1]],
+var tutorialData = [4, 4, [[0, 0, "right", 0], [0, 2, "down", 1], [3, 3, "up", 1]],
 '[[["clue"],["solid"],["clue"],["solid"]],\
 [["down","right"],["down","up"],["down","up"],["right","up"]],\
 [["left","right"],["down","right"],["down","up"],["left","up"]],\
 [["down","left"],["left","up"],["solid"],["clue"]]]'
-]);
+];
+
+var levelsData = new Map()
 levelsData.set("manual1", [6, 6, [[0, 0, "right", 0], [0, 2, "right", 2], [2, 2, "right", 2], [1, 5, "right", 2]],
 '[[["clue"],["solid"],["clue"],["down","right"],["right","up"],["solid"]],\
 [["down","right"],["down","up"],["down","up"],["left","up"],["left","right"],["clue"]],\
@@ -554,7 +554,7 @@ class Tutorial extends Grid {
 
     calculateCellsSizeAndMargins() {
         let topSpaceHeight = parseInt(0.16 * c.height);
-        let bottomSpaceHeight = parseInt(0.22 * c.height);
+        let bottomSpaceHeight = parseInt(0.26 * c.height);
         let sidePanelsWidth = parseInt(0.2 * c.width);
         let basicMargin = Math.floor(0.035 * c.height);
 
@@ -744,7 +744,7 @@ class Tutorial extends Grid {
         }
 
         //fitRectInSpace();
-        let fontSize = calculateMaxFontSize(4, tutorialSubtitlesMaxLength, c.width - 1 * this.basicMargin, this.bottomPanelHeight - this.basicMargin);
+        let fontSize = calculateMaxFontSize(4, tutorialSubtitlesMaxLength, c.width - 0 * this.basicMargin, this.bottomPanelHeight - this.basicMargin);
         console.log(fontSize);
         drawTextInBox(c.width, this.bottomPanelHeight, c.height - this.bottomPanelHeight, this.slide, fontSize);
     }
@@ -1178,7 +1178,7 @@ class Menu {
     }
 
     calculateButtonsPositionsAndSize(nInRow) {
-        let spacesToButtonsRatio = 0.4
+        let spacesToButtonsRatio = 0.2
         let buttonSize = parseInt(this.levelsContainerX / (nInRow + (nInRow + 1) * spacesToButtonsRatio));
         let spaceBetween = parseInt(spacesToButtonsRatio * buttonSize);
         
@@ -1205,7 +1205,7 @@ class Menu {
         // ctx.fillRect(0, this.topSpaceHeight, c.width, - this.topSpaceHeight);
 
         //bottom square
-        ctx.fillStyle = "#47FFB1";
+        ctx.fillStyle = "LightSalmon";
         ctx.fillRect(this.levelsContainerTranslationX, this.levelsContainerTranslationY, this.levelsContainerX, this.levelsContainerY);
 
         //levelButtons
@@ -1281,7 +1281,7 @@ function drawTextInBox(width, height, translationY, n, fontSize) {
     ctx.textAlign = "center";
     ctx.font = font;
 
-    console.log(ctx.measureText("We can mark the cell next to the black block, since we know we cannot"));
+    //console.log(ctx.measureText("We can mark the cell next to the black block, since we know we cannot"));
 
     console.log(tutorialSubtitles[n]);
     for (let i = 0; i < tutorialSubtitles[n].length; i++) {
@@ -1321,8 +1321,8 @@ function initializeMenu() {
 function initializeTutorial() {
     state = "tutorial";
     loadTutorialStateArray();
-    let levelData = levelsData.get("tutorial");
-    tutorial = new Tutorial("tutorial", levelData);
+    // let levelData = levelsData.get("tutorial");
+    tutorial = new Tutorial("tutorial", tutorialData);
     tutorial.calculateAllAndDraw();
 }
 
