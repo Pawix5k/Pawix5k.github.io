@@ -345,6 +345,12 @@ class Grid {
         this.cellsY = y;
     }
 
+    handleClearing() {
+        this.clearCells();
+        this.manageSolvedState();
+        this.drawBoard();
+    }
+
     saveDataToLocalStorage() {
         window.localStorage.setItem(this.name, JSON.stringify(this.playerSolution));
     }
@@ -1124,8 +1130,7 @@ class Button {
                     initializeMenu();
                     break;
                 case "clear-cells":
-                    grid.clearCells();
-                    grid.manageSolvedState();
+                    grid.handleClearing();
                     break;
                 case "next-slide":
                     tutorial.nextSlide();
