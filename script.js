@@ -381,7 +381,7 @@ class Grid {
         let solved = this.checkIfSolved();
         if (this.solved == false && solved == true) {
             this.solved = solved;
-            grid.changeCellsColorAndDraw("limegreen");
+            grid.changeCellsColorAndDraw("lightgreen");
         }
         else if (this.solved == true && solved == false) {
             this.solved = solved;
@@ -479,12 +479,6 @@ class Grid {
         this.drawBackground();
         this.drawBorders();
         this.drawCells();
-
-        //draw top bar
-        ctx.fillStyle = "coral";
-        ctx.fillRect(0, 0, c.width, this.topSpaceHeight); 
-
-        //draw buttons
         this.buttons.forEach((element) => element.draw());
     }
 
@@ -516,7 +510,7 @@ class Grid {
     }
 
     drawBackground() {
-        ctx.fillStyle = "crimson";
+        ctx.fillStyle = "LightSalmon";
         ctx.fillRect(0, 0, c.width, c.height);
     }
 
@@ -773,7 +767,7 @@ class Tutorial extends Grid {
     }
 
     drawBackground() {
-        ctx.fillStyle = "Tomato";
+        ctx.fillStyle = "LightSalmon";
         ctx.fillRect(0, 0, c.width, c.height);
 
         // //draw top bar
@@ -1151,8 +1145,6 @@ class Button {
         let triangleHeight = 0.95 * this.size;
         let triangleWidth = 0.8 * triangleHeight;
 
-        fillRoundedRect(this.x, this.y, this.size, this.size, 8, "floralwhite");
-        strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
         fillRoundedLeftTriangle(this.x + (this.size - triangleWidth) / 2, this.y + (this.size - triangleHeight) / 2, triangleWidth, triangleHeight, this.size * 0.1, "floralwhite");
         strokeRoundedLeftTriangle(this.x + (this.size - triangleWidth) / 2, this.y + (this.size - triangleHeight) / 2, triangleWidth, triangleHeight, this.size * 0.1, "#2A2A2A", 4);
     }
@@ -1161,8 +1153,6 @@ class Button {
         let triangleHeight = 0.95 * this.size;
         let triangleWidth = 0.8 * triangleHeight;
 
-        fillRoundedRect(this.x, this.y, this.size, this.size, 8, "floralwhite");
-        strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
         fillRoundedRightTriangle(this.x + (this.size - triangleWidth) / 2, this.y + (this.size - triangleHeight) / 2, triangleWidth, triangleHeight, this.size * 0.1, "floralwhite");
         strokeRoundedRightTriangle(this.x + (this.size - triangleWidth) / 2, this.y + (this.size - triangleHeight) / 2, triangleWidth, triangleHeight, this.size * 0.1, "#2A2A2A", 4);
     }
@@ -1206,7 +1196,7 @@ class Button {
                 color = "floralwhite";
                 break;
             case "started":
-                color = "#7FBFD4";
+                color = "#C0E7FF";
                 break;
             case "finished":
                 color = "LightGreen";
@@ -1217,8 +1207,11 @@ class Button {
         ctx.fillStyle = "#2A2A2A";
         ctx.textAlign = "center";
         ctx.font = font;
-        console.log(ctx.font);
-        ctx.fillText(this.levelSize, this.x + this.size / 2, this.y + this.size * 3 / 4);
+        ctx.fillText(this.levelSize, this.x + this.size / 2, this.y + this.size * 0.8);
+
+        fontSize = this.size * 0.4;
+        font = (fontSize).toString().concat('px Cabin');
+        ctx.font = font;
         ctx.fillText(this.index, this.x + this.size / 2, this.y + this.size / 2);
     }
 
