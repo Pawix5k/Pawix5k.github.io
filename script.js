@@ -114,7 +114,7 @@ var tutorialSubtitles = [
     ['The only possible direction for this',
     'section of line is up (clue on the',
     'right, wall of the puzzle below).'],
-    ['We cannot link the line to make a loop',
+    ['We CANNOT link the line to make a loop',
     'yet, because we would left remaining',
     'cells blank.'],
     ['So the line can only go in this', 'direction.'],
