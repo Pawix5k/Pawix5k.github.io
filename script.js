@@ -574,7 +574,6 @@ class Tutorial extends Grid {
                 break;
             case 18:
                 this.drawBoard();
-                this.cells[0][0].draw("Khaki");
                 this.cells[1][0].draw("Khaki");
                 this.cells[2][0].draw("Khaki");
                 this.cells[3][0].draw("Khaki");
@@ -709,7 +708,7 @@ class Cell {
                 ctx.fillRect(this.pos_x + 2, this.pos_y + 2, this.size - 4, this.size - 4);
                 break;
             case 'non-solid':
-                let dotSize = this.size * 0.04;
+                let dotSize = this.size * 0.055;
                 ctx.fillStyle = "gray";
                 ctx.fillRect(this.center_x - dotSize / 2, this.center_y - dotSize / 2, dotSize, dotSize);
                 break;
