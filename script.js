@@ -53,57 +53,57 @@ var tutorialStateArray;
 
 
 var tutorialSubtitles = [
-    ['Goal of this game is to draw a single', 'loop going through each cell.'],
-    ['Number in clue indicates how many black',
-     'blocks are between them and the puzzle',
-     'wall indicated by the arrow direction.'],
+    ['The goal of this puzzle is to draw a',
+    'single non intersecting loop. Every',
+    'puzzle has exactly one solution.'],
+    ['Number in clue indicates how many',
+    'black blocks are between them and the',
+    'puzzle wall pointed by the arrow.'],
     ['You must fill all the empty cells with', 'either lines, or black blocks.'],
     ['Click/tap twice on empty cell, or once',
-     'on occupied cell to draw black block.'],
-    ['Each segment of the loop contains lines',
-     'going out in two directions. Slide over',
-     'the cells to draw a line. Slide again to',
-     'erase it.'],
-    ['You can place a marker meaning the cell',
-     'cannot be occupied by a black block.'],
-    ['You cannot place two black blocks next',
-     'to each other (sharing sides)...'],
-    ['but tou can place them diagonally', '(touching corners).'],
-    ['You can place a black block next to a', 'clue cell.'],
+    'on occupied cell to draw a black block.'],
+    ['Each segment of the loop contains',
+    'lines going out in two directions.',
+    'Slide over the cells to draw a line.',
+    'Slide again to erase it.'],
+    ['You can place a marker meaning the',
+    'cell cannot be occupied by a black',
+    'block.'],
+    ['You cannot place two black blocks next', 'to each other (sharing sides).'],
+    ['But you can place them diagonally', '(touching corners).'],
+    ['You can place a black block next to a', 'cell with a clue.'],
     ['Clue with 0 and arrow pointing right',
-     'means there are no black blocks in the',
-     'yellow area.'],
-    ['Clue with 1 and arrow pointing up means',
-     'there is exactly one black block in the',
-     'yellow area, but we do not know where',
-     'yet.'],
+    'means there are no black blocks in the',
+    'yellow area.'],
+    ['Clue with 1 and arrow pointing up',
+    'means there is exactly one black block',
+    'in the yellow area, but we do not know',
+    'where yet.'],
     ['Clue with 1 and arrow pointing down', 'points to only one cell...'],
-    ['so we know we must place a black block', 'there.'],
+    ['...so we know we must place a black', 'block there.'],
     ['We can mark the cell next to the black',
-     'block, since we know we cannot place',
-     'another black block next to it, or solve',
-     'it rightaway.'],
+    'block, since we know we cannot place',
+    'another black block there.'],
     ['Each segment of the loop contains 2',
-     'lines going in different directions.We',
-     'cannot go left (black block) or down',
-     '(wall) so we can only go up and right.'],
+    'lines going in different directions. We',
+    'cannot go left (black block) or down',
+    '(wall), so we can only go up and right.'],
     ['The only possible direction for this',
-     'section of line is up (clue on the',
-     'right, wall of the puzzle below).'],
+    'section of line is up (clue on the',
+    'right, wall of the puzzle below).'],
     ['We cannot link the line to make a loop',
-     'yet, because we would leftremaining',
-     'cells blank...'],
-    ['So we can only make this segment of the', 'loop go up.'],
-    ['This clue indicates there cannot be any',
-     'black blocks in the yellow area, so',
-     'wecan put markers on the cells inside',
-     'it...'],
-    ['and then solve like the previous parts.'],
-    ['Yellow cell on the left is blocked from',
-     'all 4 sides, and the yellow cell on the',
-     'right is the only empty cell left',
-     'pointed by the right bottom clue...'],
-    ['which means we must place black blocks', 'in them.'],
+    'yet, because we would left remaining',
+    'cells blank.'],
+    ['So the line can only go in this', 'direction.'],
+    ['Because of the clue we know there',
+    "won't be any black blocks in yellow",
+    'area.'],
+    ['We can then solve it like in the', 'previous parts.'],
+    ['Yellow cell on the left is blocked',
+    'from all 4 sides, and the yellow cell',
+    'on the right is the only empty cell',
+    'left pointed by the right bottom clue.'],
+    ['Which means we must place black blocks', 'in them.'],
     ['We can finally link two ends of the', 'line and solve the puzzle.']
 ];
 
@@ -681,7 +681,6 @@ class Tutorial extends Grid {
                 break;
             case 9:
                 this.drawBoard();
-                this.cells[0][0].draw("Khaki");
                 this.cells[1][0].draw("Khaki");
                 this.cells[2][0].draw("Khaki");
                 this.cells[3][0].draw("Khaki");
@@ -691,11 +690,9 @@ class Tutorial extends Grid {
                 this.cells[3][0].draw("Khaki");
                 this.cells[3][1].draw("Khaki");
                 this.cells[3][2].draw("Khaki");
-                this.cells[3][3].draw("Khaki");
                 break;
             case 11:
                 this.drawBoard();
-                this.cells[0][2].draw("Khaki");
                 this.cells[0][3].draw("Khaki");
                 break;
             case 13:
@@ -717,6 +714,11 @@ class Tutorial extends Grid {
                 this.drawBoard();
                 this.cells[1][2].draw("Khaki");
                 this.cells[2][2].draw("Khaki");
+                break;
+            case 17:
+                this.drawBoard();
+                this.cells[1][1].draw("Khaki");
+                this.cells[1][2].draw("Khaki");
                 break;
             case 18:
                 this.drawBoard();
