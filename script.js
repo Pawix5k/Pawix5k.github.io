@@ -1362,16 +1362,58 @@ function fillRoundedRect(x, y, width, height, radius, color) {
     ctx.fill();
 }
 
-function strokeRoundedTriangle(x, y, width, height, radius, color, lineWidth) {
+function strokeRoundedRightTriangle(x, y, height, radius, color, lineWidth) {
     ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
+    const width = height / 2;
+
     ctx.beginPath();
-    ctx.moveTo(x, y + radius);
-    ctx.arcTo(x, y + height, x + radius, y + height, radius);
-    ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
-    ctx.arcTo(x + width, y, x + width - radius, y, radius);
-    ctx.arcTo(x, y, x, y + radius, radius);
+    ctx.moveTo(x, y + height / 2);
+    ctx.arcTo(x, y + height, x + width / 2, y + 3 / 4 * height, radius);
+    ctx.arcTo(x + width, y + height / 2, x + width / 2, y + 1 / 4 * height, radius);
+    ctx.arcTo(x, y, x, y + height / 2, radius);
+    ctx.lineTo(x, y + height / 2, radius);
     ctx.stroke();
+}
+
+function strokeRoundedLeftTriangle(x, y, height, radius, color, lineWidth) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    const width = height / 2;
+
+    ctx.beginPath();
+    ctx.moveTo(x + width, y + height / 2);
+    ctx.arcTo(x + width, y + height, x + width / 2, y + 3 / 4 * height, radius);
+    ctx.arcTo(x, y + height / 2, x + width / 2, y + 1 / 4 * height, radius);
+    ctx.arcTo(x + width, y, x + width, y + height / 2, radius);
+    ctx.lineTo(x + width, y + height / 2, radius);
+    ctx.stroke();
+}
+
+function fillRoundedRightTriangle(x, y, height, radius, color) {
+    ctx.strokeStyle = color;
+    const width = height / 2;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y + height / 2);
+    ctx.arcTo(x, y + height, x + width / 2, y + 3 / 4 * height, radius);
+    ctx.arcTo(x + width, y + height / 2, x + width / 2, y + 1 / 4 * height, radius);
+    ctx.arcTo(x, y, x, y + height / 2, radius);
+    ctx.lineTo(x, y + height / 2, radius);
+    ctx.fill();
+}
+
+function fillRoundedLeftTriangle(x, y, height, radius, color) {
+    ctx.strokeStyle = color;
+    const width = height / 2;
+
+    ctx.beginPath();
+    ctx.moveTo(x + width, y + height / 2);
+    ctx.arcTo(x + width, y + height, x + width / 2, y + 3 / 4 * height, radius);
+    ctx.arcTo(x, y + height / 2, x + width / 2, y + 1 / 4 * height, radius);
+    ctx.arcTo(x + width, y, x + width, y + height / 2, radius);
+    ctx.lineTo(x + width, y + height / 2, radius);
+    ctx.fill();
 }
 
 
@@ -1427,3 +1469,5 @@ ctx.fillText("6 x 9", 0, 0);
 setTimeout(() => {
     initializeMenu();
 }, 500);
+
+
