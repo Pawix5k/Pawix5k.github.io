@@ -1,17 +1,43 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
-
 c.width = window.innerWidth;
 c.height = window.innerHeight;
 
-// var colors = {
-//     winningCell: ""
-// }
-
-
+var move;
+var grid;
+var menu;
+var tutorial;
 
 window.addEventListener('resize', adjustCanvasSize);
+
+c.addEventListener('mousedown', (event) => {
+    handleStartInput(event.offsetX, event.offsetY)
+});
+
+c.addEventListener('mousemove', (event) => {
+    handleMoveInput(event.offsetX, event.offsetY);
+});
+
+c.addEventListener('mouseup', (event) => {
+    handleEndInput(event.offsetX, event.offsetY);
+});
+
+
+c.addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    handleStartInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+});
+
+c.addEventListener('touchmove', (event) => {
+    event.preventDefault();
+    handleMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+});
+
+c.addEventListener('touchend', (event) => {
+    event.preventDefault();
+    handleEndInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+});
 
 var state = "menu";
 var tutorialData = [4, 4, [[0, 0, "right", 0], [0, 2, "down", 1], [3, 3, "up", 1]],
@@ -48,10 +74,7 @@ levelsData.set("manual3", [7, 10, [[0, 6, "down", 0], [1, 1, "right", 2], [2, 6,
 [["down","left"],["down","up"],["down","up"],["left","up"],["solid"],["down","left"],["down","up"],["down","up"],["left","up"],["clue"]]]'
 ]);
 
-
 var tutorialStateArray;
-
-
 var tutorialSubtitles = [
     ['The goal of this puzzle is to draw a',
     'single non intersecting loop. Every',
@@ -108,175 +131,6 @@ var tutorialSubtitles = [
 ];
 
 var tutorialSubtitlesMaxLength = longestSubtitle();
-
-function longestSubtitle() {
-    let maxLength = 0;
-    for (let i = 0; i < tutorialSubtitles.length; i++) {
-        for (let j = 0; j < tutorialSubtitles[i].length; j++) {
-            if (tutorialSubtitles[i][j].length > maxLength) {
-                maxLength = tutorialSubtitles[i][j].length;
-            }
-        }
-    }
-
-    return maxLength;
-}
-
-
-
-function loadTutorialStateArray() {
-    tutorialStateArray = [];
-
-    tutorialStateArray.push([]);
-    tutorialStateArray.push([]);
-    tutorialStateArray.push([]);
-    tutorialStateArray.push([[1, 1, "solid"]]);
-    
-    tutorialStateArray.push([[1, 1, "down"], [1, 1, "right"]]);
-    tutorialStateArray.push([[1, 1, "non-solid"]]);
-    tutorialStateArray.push([[1, 1, "solid"], [2, 1, "solid"]]);
-    tutorialStateArray.push([[1, 1, "solid"], [2, 2, "solid"]]);
-    
-    tutorialStateArray.push([[1, 2, "solid"]]);
-    tutorialStateArray.push([]);
-    tutorialStateArray.push([]);
-    tutorialStateArray.push([]);
-    
-    tutorialStateArray.push([[0, 3, "solid"]]);
-    tutorialStateArray.push([[0, 3, "solid"], [1, 3, "non-solid"]]);
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"]
-    ]);
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"]
-    ]);
-    
-    
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "right"], [2, 2, "left"]
-    ]);
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"]
-    ]);
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
-        [1, 0, "non-solid"], [2, 0, "non-solid"], [3, 0, "non-solid"]
-    ]);
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
-        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
-        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"]
-    ]);
-    
-    
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
-        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
-        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"]
-    ]);
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
-        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
-        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"], [0, 1, "solid"], [3, 2, "solid"]
-    ]);
-    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
-        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
-        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
-        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"], [0, 1, "solid"], [3, 2, "solid"],
-        [2, 2, "up"], [2, 1, "down"], [2, 1, "right"], [3, 1, "left"]
-    ]);
-}
-
-
-c.addEventListener('mousedown', (event) => {
-    handleStartInput(event.offsetX, event.offsetY)
-});
-
-c.addEventListener('mousemove', (event) => {
-    handleMoveInput(event.offsetX, event.offsetY);
-});
-
-c.addEventListener('mouseup', (event) => {
-    handleEndInput(event.offsetX, event.offsetY);
-});
-
-
-c.addEventListener('touchstart', (event) => {
-    event.preventDefault();
-    handleStartInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
-});
-
-c.addEventListener('touchmove', (event) => {
-    event.preventDefault();
-    handleMoveInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
-});
-
-c.addEventListener('touchend', (event) => {
-    event.preventDefault();
-    handleEndInput(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
-});
-
-
-function handleStartInput(x, y) {
-    switch (state) {
-        case 'menu':
-            break;
-        case 'game':
-            move.loadNewDownInput(x, y);
-            break;
-        case 'tutorial':
-            break;
-    }
-}
-
-function handleMoveInput(x, y) {
-    switch (state) {
-        case 'menu':
-            break;
-        case 'game':
-            move.loadNewMoveInput(x, y);
-            break;
-        case 'tutorial':
-            break;
-    }
-}
-
-
-function handleEndInput(x, y) {
-    switch (state) {
-        case 'menu':
-            menu.checkCollisionWithButtons(x, y);
-            break;
-        case 'game':
-            grid.checkCollisionWithButtons(x, y);
-            move.loadNewUpInput(x, y);
-            break;
-        case 'tutorial':
-            tutorial.checkCollisionWithButtons(x, y);
-            break;
-    }
-}
-
-
-function adjustCanvasSize() {
-    c.width = window.innerWidth;
-    c.height = window.innerHeight;
-
-    switch (state) {
-        case "menu":
-            menu.calculateTopSpaceHeight();
-            menu.calculateContainerVariables();
-            menu.calculateButtonsPositionsAndSize(4);
-            menu.draw();
-            break;
-        case "game":
-            grid.calculateAllAndDraw();
-            break;
-        case "tutorial":
-            tutorial.calculateAllAndDraw();
-            break;
-    }
-}
 
 
 class Grid {
@@ -406,14 +260,12 @@ class Grid {
 
         let str = '[';
         for (const line of arr) {
-            //str += JSON.stringify(line) + ',\\\n';
             str += JSON.stringify(line) + ',\n';
         }
-        //str = str.slice(0, -3);
         str = str.slice(0, -2);
         str += ']';
 
-        console.log(str);
+        return str;
     }
 
     checkCollisionWithButtons(x, y) {
@@ -744,7 +596,6 @@ class Tutorial extends Grid {
                 this.drawBoard();
         }
 
-        //fitRectInSpace();
         let fontSize = calculateMaxFontSize(4, tutorialSubtitlesMaxLength, c.width - 0 * this.basicMargin, this.bottomPanelHeight - this.basicMargin);
         drawTextInBox(c.width, this.bottomPanelHeight, c.height - this.bottomPanelHeight, this.slide, fontSize);
     }
@@ -771,24 +622,6 @@ class Tutorial extends Grid {
     drawBackground() {
         ctx.fillStyle = "LightSalmon";
         ctx.fillRect(0, 0, c.width, c.height);
-
-        // //draw top bar
-        // ctx.fillStyle = "coral";
-        // ctx.fillRect(0, 0, c.width, this.topSpaceHeight);
-
-        //draw bottom bar
-        // ctx.fillStyle = "aqua";
-        // ctx.fillRect(0, c.height - this.bottomPanelHeight, c.width, this.bottomPanelHeight);
-
-        // //draw left side panel
-        // ctx.fillStyle = "darkseagreen";
-        // ctx.fillRect(0, this.topSpaceHeight, this.sidePanelsWidth, c.height - this.topSpaceHeight - this.bottomPanelHeight);
-
-        // //draw left side panel
-        // ctx.fillStyle = "darksalmon";
-        // ctx.fillRect(c.width - this.sidePanelsWidth, this.topSpaceHeight, this.sidePanelsWidth, c.height - this.topSpaceHeight - this.bottomPanelHeight);
-
-        //draw buttons
         this.buttons.forEach((element) => element.draw());
     }
 }
@@ -939,7 +772,7 @@ class Cell {
     draw(color = this.color) {
         ctx.fillStyle = "black";
         ctx.fillRect(this.pos_x - 2, this.pos_y - 2, this.size + 4, this.size + 4);
-        // border
+
         ctx.fillStyle = color;
         ctx.fillRect(this.pos_x + 2, this.pos_y + 2, this.size - 4, this.size - 4);
         this.lines.forEach(element => this.drawLine(element));
@@ -954,7 +787,6 @@ class Move {
     pointerDown = false;
     erasing = false;
 
-    //loadNewDownInput(grid, coordinateX, coordinateY) {
     loadNewDownInput(coordinateX, coordinateY) {
         let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
 
@@ -964,7 +796,6 @@ class Move {
         }
     }
 
-    //loadNewMoveInput(grid, coordinateX, coordinateY) {
     loadNewMoveInput(coordinateX, coordinateY) {
         let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
 
@@ -995,7 +826,6 @@ class Move {
         }
     }
 
-    //loadNewUpInput(grid, coordinateX, coordinateY) {
     loadNewUpInput(coordinateX, coordinateY) {
         if (this.leftOriginalCell == false) {
             let cellCoordinates = grid.convertCoordinatesToCells(coordinateX, coordinateY);
@@ -1017,10 +847,6 @@ class Move {
         this.leftOriginalCell = false;
         this.pointerDown = false;
         this.erasing = false;
-
-
-
-        //grid.drawBoard();
     }
 
     resolveLinesInCells() {
@@ -1136,7 +962,6 @@ class Button {
         ctx.fillStyle = "#2A2A2A";
         ctx.textAlign = "center";
         ctx.font = font;
-        console.log(ctx.font);
         ctx.fillText("clear", this.x + this.size / 2, this.y + this.size / 2 - buffer);
         ctx.fillText("all", this.x + this.size / 2, this.y + this.size / 2 + fontSize - buffer);
     }
@@ -1166,7 +991,6 @@ class Button {
         ctx.fillStyle = "#2A2A2A";
         ctx.textAlign = "center";
         ctx.font = font;
-        console.log(ctx.font);
         ctx.fillText("how", this.x + this.size / 2, this.y + this.size / 2 - buffer);
         ctx.fillText("to", this.x + this.size / 2, this.y + this.size / 2 + fontSize - buffer);
         ctx.fillText("play", this.x + this.size / 2, this.y + this.size / 2 + 2 * fontSize - buffer);
@@ -1181,7 +1005,6 @@ class Button {
         ctx.fillStyle = "#2A2A2A";
         ctx.textAlign = "center";
         ctx.font = font;
-        console.log(ctx.font);
         ctx.fillText("more", this.x + this.size / 2, this.y + this.size / 2 - buffer);
         ctx.fillText("coming", this.x + this.size / 2, this.y + this.size / 2 + fontSize - buffer);
         ctx.fillText("soon", this.x + this.size / 2, this.y + this.size / 2 + 2 * fontSize - buffer);
@@ -1323,22 +1146,16 @@ class Menu {
         ctx.fillStyle = "#2A2A2A";
         ctx.textAlign = "center";
         ctx.font = font;
-        console.log(ctx.font);
         ctx.fillText("Yajilin", c.width / 2, this.topSpaceHeight);
     }
 
     draw() {
         ctx.fillStyle = "LightSalmon";
         ctx.fillRect(0, 0, c.width, c.height);
-        //top bar
-        // ctx.fillStyle = "coral";
-        // ctx.fillRect(0, this.topSpaceHeight, c.width, - this.topSpaceHeight);
 
-        //bottom square
         ctx.fillStyle = "LightSalmon";
         ctx.fillRect(this.levelsContainerTranslationX, this.levelsContainerTranslationY, this.levelsContainerX, this.levelsContainerY);
 
-        //levelButtons
         this.levelButtons.forEach(element => element.draw());
         this.buttons.forEach(element => element.draw());
 
@@ -1361,6 +1178,143 @@ class Menu {
         this.topSpaceHeight = parseInt(0.16 * c.height);
 
         this.basicMargin = Math.floor(0.035 * c.height);
+    }
+}
+
+
+function longestSubtitle() {
+    let maxLength = 0;
+    for (let i = 0; i < tutorialSubtitles.length; i++) {
+        for (let j = 0; j < tutorialSubtitles[i].length; j++) {
+            if (tutorialSubtitles[i][j].length > maxLength) {
+                maxLength = tutorialSubtitles[i][j].length;
+            }
+        }
+    }
+
+    return maxLength;
+}
+
+function loadTutorialStateArray() {
+    tutorialStateArray = [];
+
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([[1, 1, "solid"]]);
+    
+    tutorialStateArray.push([[1, 1, "down"], [1, 1, "right"]]);
+    tutorialStateArray.push([[1, 1, "non-solid"]]);
+    tutorialStateArray.push([[1, 1, "solid"], [2, 1, "solid"]]);
+    tutorialStateArray.push([[1, 1, "solid"], [2, 2, "solid"]]);
+    
+    tutorialStateArray.push([[1, 2, "solid"]]);
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([]);
+    tutorialStateArray.push([]);
+    
+    tutorialStateArray.push([[0, 3, "solid"]]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 3, "non-solid"]]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"]
+    ]);
+    
+    
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "right"], [2, 2, "left"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 0, "non-solid"], [2, 0, "non-solid"], [3, 0, "non-solid"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
+        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"]
+    ]);
+    
+    
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
+        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
+        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"], [0, 1, "solid"], [3, 2, "solid"]
+    ]);
+    tutorialStateArray.push([[0, 3, "solid"], [1, 2, "down"], [1, 3, "up"], [1, 3, "right"],
+        [2, 3, "left"], [2, 3, "up"], [2, 2, "down"], [1, 2, "up"], [1, 1, "down"],
+        [1, 1, "up"], [1, 0, "down"], [1, 0, "right"], [2, 0, "left"], [2, 0, "right"],
+        [3, 0, "left"], [3, 0, "down"], [3, 1, "up"], [0, 1, "solid"], [3, 2, "solid"],
+        [2, 2, "up"], [2, 1, "down"], [2, 1, "right"], [3, 1, "left"]
+    ]);
+}
+
+function handleStartInput(x, y) {
+    switch (state) {
+        case 'menu':
+            break;
+        case 'game':
+            move.loadNewDownInput(x, y);
+            break;
+        case 'tutorial':
+            break;
+    }
+}
+
+function handleMoveInput(x, y) {
+    switch (state) {
+        case 'menu':
+            break;
+        case 'game':
+            move.loadNewMoveInput(x, y);
+            break;
+        case 'tutorial':
+            break;
+    }
+}
+
+
+function handleEndInput(x, y) {
+    switch (state) {
+        case 'menu':
+            menu.checkCollisionWithButtons(x, y);
+            break;
+        case 'game':
+            grid.checkCollisionWithButtons(x, y);
+            move.loadNewUpInput(x, y);
+            break;
+        case 'tutorial':
+            tutorial.checkCollisionWithButtons(x, y);
+            break;
+    }
+}
+
+function adjustCanvasSize() {
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+
+    switch (state) {
+        case "menu":
+            menu.calculateTopSpaceHeight();
+            menu.calculateContainerVariables();
+            menu.calculateButtonsPositionsAndSize(4);
+            menu.draw();
+            break;
+        case "game":
+            grid.calculateAllAndDraw();
+            break;
+        case "tutorial":
+            tutorial.calculateAllAndDraw();
+            break;
     }
 }
 
@@ -1493,14 +1447,6 @@ function fillRoundedLeftTriangle(x, y, width, height, radius, color) {
     ctx.fill();
 }
 
-
-
-var move;
-var grid;
-var menu;
-var tutorial;
-
-
 function initializeGame(levelName) {
     let levelData = levelsData.get(levelName);
     state = "game";
@@ -1524,28 +1470,28 @@ function initializeMenu() {
 function initializeTutorial() {
     state = "tutorial";
     loadTutorialStateArray();
-    // let levelData = levelsData.get("tutorial");
     tutorial = new Tutorial("tutorial", tutorialData);
     tutorial.calculateAllAndDraw();
 }
 
-let font = (6).toString().concat('px Cabin');
-ctx.fillStyle = "#2A2A2A";
-ctx.textAlign = "center";
-ctx.font = font;
-console.log(ctx.font);
-ctx.fillText("6 x 9", 0, 0);
+function loadFonts() {
+    let font = (6).toString().concat('px Cabin');
+    ctx.fillStyle = "#2A2A2A";
+    ctx.textAlign = "center";
+    ctx.font = font;
+    ctx.fillText("6 x 9", 0, 0);
 
-font = (6).toString().concat('px Merienda One');
-ctx.fillStyle = "#2A2A2A";
-ctx.textAlign = "center";
-ctx.font = font;
-console.log(ctx.font);
-ctx.fillText("6 x 9", 0, 0);
+    font = (6).toString().concat('px Merienda One');
+    ctx.fillStyle = "#2A2A2A";
+    ctx.textAlign = "center";
+    ctx.font = font;
+    ctx.fillText("6 x 9", 0, 0);
+}
 
+
+loadFonts();
 setTimeout(() => {
     initializeMenu();
-
 }, 500);
 
 
