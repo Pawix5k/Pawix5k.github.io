@@ -1106,30 +1106,51 @@ class Button {
 
     draw() {
         if (this.visible) {
-            if (this.type == "level") {
-                this.drawLevelButton();
-            }
-            else if (this.type == "ghost-level") {
-                this.drawGhostLevelButton();
-            }
-            else {
-                ctx.fillStyle = "beige";
-                ctx.fillRect(this.x, this.y, this.size, this.size);
+            switch(this.type) {
+                case "level":
+                    this.drawLevelButton();
+                    break;
+                case "ghost-level":
+                    this.drawGhostLevelButton();
+                    break;
+                case "to-tutorial":
+                    this.drawToTutorialButton();
+                    break;
+                default:
+                    ctx.fillStyle = "beige";
+                    ctx.fillRect(this.x, this.y, this.size, this.size);
             }
         }
     }
 
-    drawGhostLevelButton() {
-        let fontSize = this.size / 6;
+    drawToTutorialButton() {
+        let fontSize = this.size * 0.26;
+        let buffer = this.size * 0.2;
         let font = (fontSize).toString().concat('px Cabin');
+        fillRoundedRect(this.x, this.y, this.size, this.size, 8, "floralwhite");
         strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
         ctx.fillStyle = "#2A2A2A";
         ctx.textAlign = "center";
         ctx.font = font;
         console.log(ctx.font);
-        ctx.fillText("more", this.x + this.size / 2, this.y + this.size / 2);
-        ctx.fillText("coming", this.x + this.size / 2, this.y + this.size / 2 + fontSize);
-        ctx.fillText("soon", this.x + this.size / 2, this.y + this.size / 2 + 2 * fontSize);
+        ctx.fillText("how", this.x + this.size / 2, this.y + this.size / 2 - buffer);
+        ctx.fillText("to", this.x + this.size / 2, this.y + this.size / 2 + fontSize - buffer);
+        ctx.fillText("play", this.x + this.size / 2, this.y + this.size / 2 + 2 * fontSize - buffer);
+    }
+
+    drawGhostLevelButton() {
+        let fontSize = this.size / 6;
+        let font = (fontSize).toString().concat('px Cabin');
+        let buffer = this.size * 0.1;
+
+        strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
+        ctx.fillStyle = "#2A2A2A";
+        ctx.textAlign = "center";
+        ctx.font = font;
+        console.log(ctx.font);
+        ctx.fillText("more", this.x + this.size / 2, this.y + this.size / 2 - buffer);
+        ctx.fillText("coming", this.x + this.size / 2, this.y + this.size / 2 + fontSize - buffer);
+        ctx.fillText("soon", this.x + this.size / 2, this.y + this.size / 2 + 2 * fontSize - buffer);
     }
 
     drawLevelButton() {
