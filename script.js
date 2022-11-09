@@ -1097,6 +1097,8 @@ class Button {
     clickable = true;
 
     progress;
+    index;
+    levelSize;
 
     constructor(type) {
         this.type = type;
@@ -1134,7 +1136,8 @@ class Button {
         ctx.textAlign = "center";
         ctx.font = font;
         console.log(ctx.font);
-        ctx.fillText("16 x 20", this.x + this.size / 2, this.y + this.size * 3 / 4);
+        ctx.fillText(this.levelSize, this.x + this.size / 2, this.y + this.size * 3 / 4);
+        ctx.fillText(this.index, this.x + this.size / 2, this.y + this.size / 2);
     }
 
     triggerAction() {
@@ -1192,14 +1195,13 @@ class Menu {
     }
 
     addLevelButtons() {
-        // levelsData.forEach((element, index) => {
-        //     let btn = new Button("level");
-        //     btn.index = index;
-        //     this.levelButtons.push(btn)
-        // });
-        for (const name of levelsData.keys()) {
+        let index = 1;
+        for (const [name, data] of levelsData) {
             let btn = new Button("level");
             btn.levelName = name;
+            btn.index = index;
+            btn.levelSize = data[0].toString() + " x " + data[1].toString();
+
 
             if (window.localStorage.getItem(name)){
                 let levelData = levelsData.get(name);
@@ -1214,6 +1216,7 @@ class Menu {
                 btn.progress = "new";
             }
             this.levelButtons.push(btn);
+            index++;
         }
     }
 
