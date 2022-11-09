@@ -1116,11 +1116,38 @@ class Button {
                 case "to-tutorial":
                     this.drawToTutorialButton();
                     break;
+                case "previous-slide":
+                case "to-menu":
+                    this.drawLeftArrowButton();
+                    break;
+                case "next-slide":
+                    this.drawRightArrowButton();
+                    break;
                 default:
                     ctx.fillStyle = "beige";
                     ctx.fillRect(this.x, this.y, this.size, this.size);
             }
         }
+    }
+
+    drawLeftArrowButton() {
+        let triangleHeight = 0.95 * this.size;
+        let triangleWidth = 0.8 * triangleHeight;
+
+        fillRoundedRect(this.x, this.y, this.size, this.size, 8, "floralwhite");
+        strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
+        fillRoundedLeftTriangle(this.x + (this.size - triangleWidth) / 2, this.y + (this.size - triangleHeight) / 2, triangleWidth, triangleHeight, this.size * 0.1, "floralwhite");
+        strokeRoundedLeftTriangle(this.x + (this.size - triangleWidth) / 2, this.y + (this.size - triangleHeight) / 2, triangleWidth, triangleHeight, this.size * 0.1, "#2A2A2A", 4);
+    }
+
+    drawRightArrowButton() {
+        let triangleHeight = 0.95 * this.size;
+        let triangleWidth = 0.8 * triangleHeight;
+
+        fillRoundedRect(this.x, this.y, this.size, this.size, 8, "floralwhite");
+        strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
+        fillRoundedRightTriangle(this.x + (this.size - triangleWidth) / 2, this.y + (this.size - triangleHeight) / 2, triangleWidth, triangleHeight, this.size * 0.1, "floralwhite");
+        strokeRoundedRightTriangle(this.x + (this.size - triangleWidth) / 2, this.y + (this.size - triangleHeight) / 2, triangleWidth, triangleHeight, this.size * 0.1, "#2A2A2A", 4);
     }
 
     drawToTutorialButton() {
@@ -1406,10 +1433,9 @@ function fillRoundedRect(x, y, width, height, radius, color) {
     ctx.fill();
 }
 
-function strokeRoundedRightTriangle(x, y, height, radius, color, lineWidth) {
+function strokeRoundedRightTriangle(x, y, width, height, radius, color, lineWidth) {
     ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
-    const width = height / 2;
 
     ctx.beginPath();
     ctx.moveTo(x, y + height / 2);
@@ -1420,10 +1446,9 @@ function strokeRoundedRightTriangle(x, y, height, radius, color, lineWidth) {
     ctx.stroke();
 }
 
-function strokeRoundedLeftTriangle(x, y, height, radius, color, lineWidth) {
+function strokeRoundedLeftTriangle(x, y, width, height, radius, color, lineWidth) {
     ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
-    const width = height / 2;
 
     ctx.beginPath();
     ctx.moveTo(x + width, y + height / 2);
@@ -1434,9 +1459,8 @@ function strokeRoundedLeftTriangle(x, y, height, radius, color, lineWidth) {
     ctx.stroke();
 }
 
-function fillRoundedRightTriangle(x, y, height, radius, color) {
-    ctx.strokeStyle = color;
-    const width = height / 2;
+function fillRoundedRightTriangle(x, y, width, height, radius, color) {
+    ctx.fillStyle = color;
 
     ctx.beginPath();
     ctx.moveTo(x, y + height / 2);
@@ -1447,9 +1471,8 @@ function fillRoundedRightTriangle(x, y, height, radius, color) {
     ctx.fill();
 }
 
-function fillRoundedLeftTriangle(x, y, height, radius, color) {
-    ctx.strokeStyle = color;
-    const width = height / 2;
+function fillRoundedLeftTriangle(x, y, width, height, radius, color) {
+    ctx.fillStyle = color;
 
     ctx.beginPath();
     ctx.moveTo(x + width, y + height / 2);
@@ -1512,6 +1535,7 @@ ctx.fillText("6 x 9", 0, 0);
 
 setTimeout(() => {
     initializeMenu();
+
 }, 500);
 
 
