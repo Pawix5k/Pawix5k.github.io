@@ -1123,11 +1123,28 @@ class Button {
                 case "next-slide":
                     this.drawRightArrowButton();
                     break;
+                case "clear-cells":
+                    this.drawClearCellsButton();
+                    break;
                 default:
                     ctx.fillStyle = "beige";
                     ctx.fillRect(this.x, this.y, this.size, this.size);
             }
         }
+    }
+
+    drawClearCellsButton() {
+        let fontSize = this.size * 0.3;
+        let buffer = this.size * 0.08;
+        let font = (fontSize).toString().concat('px Cabin');
+        fillRoundedRect(this.x, this.y, this.size, this.size, 8, "floralwhite");
+        strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
+        ctx.fillStyle = "#2A2A2A";
+        ctx.textAlign = "center";
+        ctx.font = font;
+        console.log(ctx.font);
+        ctx.fillText("clear", this.x + this.size / 2, this.y + this.size / 2 - buffer);
+        ctx.fillText("all", this.x + this.size / 2, this.y + this.size / 2 + fontSize - buffer);
     }
 
     drawLeftArrowButton() {
@@ -1166,7 +1183,7 @@ class Button {
     }
 
     drawGhostLevelButton() {
-        let fontSize = this.size / 6;
+        let fontSize = this.size * 0.16;
         let font = (fontSize).toString().concat('px Cabin');
         let buffer = this.size * 0.1;
 
