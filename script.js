@@ -1109,6 +1109,9 @@ class Button {
             if (this.type == "level") {
                 this.drawLevelButton();
             }
+            else if (this.type == "ghost-level") {
+                this.drawGhostLevelButton();
+            }
             else {
                 ctx.fillStyle = "beige";
                 ctx.fillRect(this.x, this.y, this.size, this.size);
@@ -1116,8 +1119,22 @@ class Button {
         }
     }
 
+    drawGhostLevelButton() {
+        let fontSize = this.size / 6;
+        let font = (fontSize).toString().concat('px Cabin');
+        strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
+        ctx.fillStyle = "#2A2A2A";
+        ctx.textAlign = "center";
+        ctx.font = font;
+        console.log(ctx.font);
+        ctx.fillText("more", this.x + this.size / 2, this.y + this.size / 2);
+        ctx.fillText("coming", this.x + this.size / 2, this.y + this.size / 2 + fontSize);
+        ctx.fillText("soon", this.x + this.size / 2, this.y + this.size / 2 + 2 * fontSize);
+    }
+
     drawLevelButton() {
-        let font = (this.size / 4).toString().concat('px Cabin');;
+        let fontSize = this.size / 4;
+        let font = (fontSize).toString().concat('px Cabin');
         let color;
         switch (this.progress) {
             case "new":
@@ -1218,6 +1235,9 @@ class Menu {
             this.levelButtons.push(btn);
             index++;
         }
+        let btn = new Button("ghost-level");
+        btn.clickable = false;
+        this.levelButtons.push(btn);
     }
 
     calculateButtonsPositionsAndSize(nInRow) {
