@@ -1104,24 +1104,37 @@ class Button {
 
     draw() {
         if (this.visible) {
-            ctx.fillStyle = "beige";
-            ctx.fillRect(this.x, this.y, this.size, this.size);
-
-            switch (this.progress) {
-                case "new":
-                    ctx.fillStyle = "green";
-                    ctx.fillRect(this.x, this.y, this.size, this.size);
-                    break;
-                case "started":
-                    ctx.fillStyle = "blue";
-                    ctx.fillRect(this.x, this.y, this.size, this.size);
-                    break;
-                case "finished":
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(this.x, this.y, this.size, this.size);
-                    break;
+            if (this.type == "level") {
+                this.drawLevelButton();
+            }
+            else {
+                ctx.fillStyle = "beige";
+                ctx.fillRect(this.x, this.y, this.size, this.size);
             }
         }
+    }
+
+    drawLevelButton() {
+        let font = (this.size / 4).toString().concat('px Cabin');;
+        let color;
+        switch (this.progress) {
+            case "new":
+                color = "floralwhite";
+                break;
+            case "started":
+                color = "#7FBFD4";
+                break;
+            case "finished":
+                color = "LightGreen";
+                break;
+        }
+        fillRoundedRect(this.x, this.y, this.size, this.size, 8, color);
+        strokeRoundedRect(this.x, this.y, this.size, this.size, 8, "#2A2A2A", 4);
+        ctx.fillStyle = "#2A2A2A";
+        ctx.textAlign = "center";
+        ctx.font = font;
+        console.log(ctx.font);
+        ctx.fillText("16 x 20", this.x + this.size / 2, this.y + this.size * 3 / 4);
     }
 
     triggerAction() {
@@ -1162,6 +1175,8 @@ class Menu {
 
     levelButtons = [];
     buttons = [new Button("to-tutorial")];
+
+    lentLogoFontSize;
 
     checkCollisionWithButtons(x, y) {
         this.levelButtons.forEach((element) => {
@@ -1222,8 +1237,17 @@ class Menu {
         }
     }
 
+    drawLogo() {
+        let font = (this.logoFontSize).toString().concat('px Merienda One');
+        ctx.fillStyle = "#2A2A2A";
+        ctx.textAlign = "center";
+        ctx.font = font;
+        console.log(ctx.font);
+        ctx.fillText("Yajilin", c.width / 2, this.topSpaceHeight);
+    }
+
     draw() {
-        ctx.fillStyle = "Tomato";
+        ctx.fillStyle = "LightSalmon";
         ctx.fillRect(0, 0, c.width, c.height);
         //top bar
         // ctx.fillStyle = "coral";
@@ -1236,6 +1260,8 @@ class Menu {
         //levelButtons
         this.levelButtons.forEach(element => element.draw());
         this.buttons.forEach(element => element.draw());
+
+        this.drawLogo();
     }
 
     calculateContainerVariables() {
@@ -1243,8 +1269,11 @@ class Menu {
         this.levelsContainerX = containerSizes[0];
         this.levelsContainerY = containerSizes[1];
 
+        let fontSize = Math.min(c.width, c.height) / 10;
+
         this.levelsContainerTranslationX = parseInt((c.width - this.levelsContainerX) / 2);
         this.levelsContainerTranslationY = parseInt((c.height - this.topSpaceHeight - this.levelsContainerY) / 2 + this.topSpaceHeight);
+        this.logoFontSize = fontSize;
     }
 
     calculateTopSpaceHeight() {
@@ -1310,6 +1339,43 @@ function drawTextInBox(width, height, translationY, n, fontSize) {
     }
 }
 
+function strokeRoundedRect(x, y, width, height, radius, color, lineWidth) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    ctx.moveTo(x, y + radius);
+    ctx.arcTo(x, y + height, x + radius, y + height, radius);
+    ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
+    ctx.arcTo(x + width, y, x + width - radius, y, radius);
+    ctx.arcTo(x, y, x, y + radius, radius);
+    ctx.stroke();
+}
+
+function fillRoundedRect(x, y, width, height, radius, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x, y + radius);
+    ctx.arcTo(x, y + height, x + radius, y + height, radius);
+    ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
+    ctx.arcTo(x + width, y, x + width - radius, y, radius);
+    ctx.arcTo(x, y, x, y + radius, radius);
+    ctx.fill();
+}
+
+function strokeRoundedTriangle(x, y, width, height, radius, color, lineWidth) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    ctx.moveTo(x, y + radius);
+    ctx.arcTo(x, y + height, x + radius, y + height, radius);
+    ctx.arcTo(x + width, y + height, x + width, y + height - radius, radius);
+    ctx.arcTo(x + width, y, x + width - radius, y, radius);
+    ctx.arcTo(x, y, x, y + radius, radius);
+    ctx.stroke();
+}
+
+
+
 var move;
 var grid;
 var menu;
@@ -1344,4 +1410,20 @@ function initializeTutorial() {
     tutorial.calculateAllAndDraw();
 }
 
-initializeMenu();
+let font = (6).toString().concat('px Cabin');
+ctx.fillStyle = "#2A2A2A";
+ctx.textAlign = "center";
+ctx.font = font;
+console.log(ctx.font);
+ctx.fillText("6 x 9", 0, 0);
+
+font = (6).toString().concat('px Merienda One');
+ctx.fillStyle = "#2A2A2A";
+ctx.textAlign = "center";
+ctx.font = font;
+console.log(ctx.font);
+ctx.fillText("6 x 9", 0, 0);
+
+setTimeout(() => {
+    initializeMenu();
+}, 500);
