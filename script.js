@@ -857,9 +857,6 @@ class Cell {
     drawLine(direction) {
         ctx.strokeStyle = "gray";
         ctx.fillStyle = "gray";
-        ctx.lineWidth = 3;
-
-        //console.log("drawing ", grid.convertCoordinatesToCells(this.pos_x, this.pos_y), " lines ", direction);
 
         switch (direction) {
             case 'up':
@@ -879,8 +876,9 @@ class Cell {
                 ctx.fillRect(this.pos_x + 2, this.pos_y + 2, this.size - 4, this.size - 4);
                 break;
             case 'non-solid':
+                let dotSize = this.size * 0.04;
                 ctx.fillStyle = "gray";
-                ctx.fillRect(this.center_x - 6, this.center_y - 6, 12, 12);
+                ctx.fillRect(this.center_x - dotSize / 2, this.center_y - dotSize / 2, dotSize, dotSize);
                 break;
             case 'clue':
                 ctx.fillStyle = this.solidColor;
