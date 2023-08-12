@@ -1,14 +1,17 @@
 # Yajilin Game
 
-Old little project, written entirely in JS and canvas HTML element.
-[read more](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial)
+## General Info
 
-I'm not too proud of this code, and it's not an overstatement. But it looks and feels quite nice (on most browsers) and is pretty responsive.
+Yajilin game written in js utilizing `<canvas>` element. Progress is saved in local storage. Includes tutorial with example solution.
 
-Rules of yajilin: [here](https://en.wikipedia.org/wiki/Yajilin#Rules) [and here](https://www.gmpuzzles.com/blog/yajilin-rules-and-info/)
+This is older project and many coding crimes were commited when making it, but nevertheless it works and looks quite good.
 
-Click once on the cell once to place a dot marker.<br>
-Click twice to place block.<br>
-Click three times to clear it.<br>
-Slide across cells to draw a line.<br>
-Slide again to erase a line.<br>
+You can play it on [pawix5k.github.io/](https://pawix5k.github.io/)
+
+Rules of yajilin: [here](https://en.wikipedia.org/wiki/Yajilin#Rules) and [here](https://www.gmpuzzles.com/blog/yajilin-rules-and-info/)
+
+## Screenshots
+
+![image](https://github.com/Pawix5k/Pawix5k.github.io/assets/35242389/50488f24-cfe3-4f7e-aa47-1275d08a9e67)
+![image](https://github.com/Pawix5k/Pawix5k.github.io/assets/35242389/715f2584-0c1e-42f8-a8cf-008b467707c0)
+![image](https://github.com/Pawix5k/Pawix5k.github.io/assets/35242389/81c8184f-3fd5-46e8-b3fc-a278ecae722f)
